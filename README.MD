@@ -13,26 +13,7 @@ go-neb is under the Apache License. To make it more complicated, our code are un
 
 # What is go-avbot
 
-AVBOT is our digital working partner. He is helping is with our daily business. From creating and sending out invoices to install server applikations. AVBOT is based on [go-neb](https://github.com/matrix-org/go-neb), a matrix BOT developed in golang. 
-
-# Requirements
-
-```
-go get github.com/Sirupsen/logrus 
-go get github.com/matrix-org/util
-go get github.com/mattn/go-sqlite3
-go get github.com/prometheus/client_golang/prometheus
-go get github.com/matrix-org/dugong
-go get github.com/matrix-org/gomatrix
-go get github.com/mattn/go-shellwords
-go get gopkg.in/yaml.v2
-go get golang.org/x/oauth2
-go get github.com/google/go-github/github
-go get github.com/sirupsen/logrus
-go get gopkg.in/alecthomas/kingpin.v2
-go get github.com/russross/blackfriday
-go get github.com/aws/aws-sdk-go
-```
+AVBOT is our digital working partner. He is helping us with our daily business. From creating and sending out invoices to install server applications. AVBOT is based on [go-neb](https://github.com/matrix-org/go-neb), a matrix BOT developed in golang. 
 
 # Features
 
@@ -50,6 +31,24 @@ go get github.com/aws/aws-sdk-go
 
 There are still a lot of work. Currently our main focus is the AWS support.
 
+# Software Requirements
+
+```
+go get github.com/Sirupsen/logrus 
+go get github.com/matrix-org/util
+go get github.com/mattn/go-sqlite3
+go get github.com/prometheus/client_golang/prometheus
+go get github.com/matrix-org/dugong
+go get github.com/matrix-org/gomatrix
+go get github.com/mattn/go-shellwords
+go get gopkg.in/yaml.v2
+go get golang.org/x/oauth2
+go get github.com/google/go-github/github
+go get github.com/sirupsen/logrus
+go get gopkg.in/alecthomas/kingpin.v2
+go get github.com/russross/blackfriday
+go get github.com/aws/aws-sdk-go
+```
 
 # API Documentation
 

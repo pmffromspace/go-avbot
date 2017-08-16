@@ -161,7 +161,7 @@ func (s *Service) cmdAwsInstanceShow(roomID, userID string, args []string) (inte
 
 		instances, err := ec.DescribeInstances(nil)
 		if err != nil {
-			return &gomatrix.TextMessage{"m.notice", "Didnt go a list of instances"}, nil
+			return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("Didnt go a list of instances: %s", err)}, nil
 		}
 		// Well, now we have all instances in a nice structure
 		var message string
