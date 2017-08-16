@@ -18,6 +18,7 @@ AVBOT is our digital working partner. He is helping us with our daily business. 
 # Features
 
 ### AWS
+- Userspecified Access Key configuration
 - Start/Stop of AWS instances
 - Show AWS List and infos of all AWS instances
 

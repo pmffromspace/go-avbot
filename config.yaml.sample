@@ -72,10 +72,17 @@ services:
     Type: "aws"
     UserID: "@goavbot:localhost"
     Config:
-      AllowedUsers: "@YOUR_USER_ID:localhost,@ANOTHER_USER_ID:localhost"      
-      AccessKey: "YOUR_AWS_ACCESS_KEY"
-      SecretAccessKey: "YOUR_AWS_SECRET_ACCESS_KEY"    
-      AccessToken: "YOUR_AWS_TOKEN (OPTIONAL)"
+      Users:
+        "@YOUR_USER_ID:localhost":
+          AccessKey: "YOUR_AWS_ACCESS_KEY"
+          SecretAccessKey: "YOUR_AWS_SECRET_ACCESS_KEY"    
+          AccessToken: "YOUR_AWS_TOKEN (OPTIONAL)"
+          Region: "us-west-2"
+        "@ANOTHER_USER_ID:localhost":
+          AccessKey: "YOUR_AWS_ACCESS_KEY"
+          SecretAccessKey: "YOUR_AWS_SECRET_ACCESS_KEY"    
+          AccessToken: "YOUR_AWS_TOKEN (OPTIONAL)"
+          Region: "us-west-2"          
 
   - ID: "github_cmd_service"
     Type: "github"
