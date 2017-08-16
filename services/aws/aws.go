@@ -146,22 +146,33 @@ func (s *Service) cmdAwsInstanceShow(roomID, userID string, args []string) (inte
 		if err != nil {
 			return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("Didnt go a list of instances: %s", err)}, nil
 		}
-		// Well, now we have all instances in a nice structure
+		// Well, now we have all instances in a nice structure, so print them out
 		var message string
 		message = fmt.Sprintf("##### Instance List")
 		message = message + fmt.Sprintf("\n```\n")
+
+		// To make it more pretty, we nead a header
+		message = message + fmt.Sprintf("| %s ", printValueStr("HostName", 20))
+		message = message + fmt.Sprintf("| %s ", printValueStr("Instance ID", 22))
+		message = message + fmt.Sprintf("| %s ", printValueStr("Type", 11))
+		message = message + fmt.Sprintf("| %s ", printValueStr("State", 9))
+		message = message + fmt.Sprintf("| %s ", printValueStr("Public DNS", 55))
+		message = message + fmt.Sprintf("| %s ", printValueStr("Public IP", 20))
+		message = message + fmt.Sprintf("| %s |", printValueStr("Launch Time", 20))
+		message = message + fmt.Sprintf("\n\n")
+
 		for i := 0; i < len(instances.Reservations); i++ {
 			if len(instances.Reservations[i].Instances[0].Tags) > 0 {
-				message = message + fmt.Sprintf("%s", printValue(instances.Reservations[i].Instances[0].Tags[0].Value, 20))
+				message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].Tags[0].Value, 20))
 			} else {
-				message = message + fmt.Sprintf("%s", printValue(nil, 20))
+				message = message + fmt.Sprintf("| %s ", printValue(nil, 20))
 			}
-			message = message + fmt.Sprintf("%s", printValue(instances.Reservations[i].Instances[0].InstanceId, 22))
-			message = message + fmt.Sprintf("%s", printValue(instances.Reservations[i].Instances[0].InstanceType, 11))
-			message = message + fmt.Sprintf("%s", printValue(instances.Reservations[i].Instances[0].State.Name, 9))
-			message = message + fmt.Sprintf("%s", printValue(instances.Reservations[i].Instances[0].PublicDnsName, 55))
-			message = message + fmt.Sprintf("%s", printValue(instances.Reservations[i].Instances[0].PublicIpAddress, 20))
-			message = message + fmt.Sprintf("%s", instances.Reservations[i].Instances[0].LaunchTime)
+			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].InstanceId, 22))
+			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].InstanceType, 11))
+			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].State.Name, 9))
+			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].PublicDnsName, 55))
+			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].PublicIpAddress, 20))
+			message = message + fmt.Sprintf("| %s |", instances.Reservations[i].Instances[0].LaunchTime)
 			message = message + fmt.Sprintf("\n")
 		}
 		message = message + fmt.Sprintf("\n```\n")
@@ -176,6 +187,11 @@ func init() {
 			DefaultService: types.NewDefaultService(serviceID, serviceUserID, ServiceType),
 		}
 	})
+}
+
+// a wrapper fo printValue to use strings and not string pointers
+func printValueStr(message string, length int) string {
+	return printValue(&message, length)
 }
 
 // this function will add spaces to a string, until the length of the string is like we need it
