@@ -70,6 +70,12 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 				return s.cmdAwsInstanceShow(roomID, userID, args)
 			},
 		},
+		types.Command{
+			Path: []string{"aws", "image", "show"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return s.cmdAwsImageShow(roomID, userID, args)
+			},
+		},
 	}
 }
 
@@ -114,6 +120,7 @@ func (s *Service) cmdAwsInstanceStart(roomID, userID string, args []string) (int
 	if sess != nil {
 		// to start a instance, we need a ec2 session
 		ec := ec2.New(sess)
+		// set a filter to get only the instance we want
 		input := &ec2.StartInstancesInput{
 			InstanceIds: []*string{
 				aws.String(instanceId),
@@ -152,27 +159,84 @@ func (s *Service) cmdAwsInstanceShow(roomID, userID string, args []string) (inte
 		message = message + fmt.Sprintf("\n```\n")
 
 		// To make it more pretty, we nead a header
-		message = message + fmt.Sprintf("| %s ", printValueStr("HostName", 20))
-		message = message + fmt.Sprintf("| %s ", printValueStr("Instance ID", 22))
-		message = message + fmt.Sprintf("| %s ", printValueStr("Type", 11))
-		message = message + fmt.Sprintf("| %s ", printValueStr("State", 9))
-		message = message + fmt.Sprintf("| %s ", printValueStr("Public DNS", 55))
-		message = message + fmt.Sprintf("| %s ", printValueStr("Public IP", 20))
-		message = message + fmt.Sprintf("| %s |", printValueStr("Launch Time", 20))
+		message = message + fmt.Sprintf("| %s ", printValueStr("INSTANCEID", 22))
+		message = message + fmt.Sprintf("| %s ", printValueStr("NAME", 20))
+		message = message + fmt.Sprintf("| %s ", printValueStr("TYPE", 11))
+		message = message + fmt.Sprintf("| %s ", printValueStr("STATE", 9))
+		message = message + fmt.Sprintf("| %s ", printValueStr("PUBLICDNS", 55))
+		message = message + fmt.Sprintf("| %s ", printValueStr("PUBLICIP", 20))
+		message = message + fmt.Sprintf("| %s |", printValueStr("LAUNCHTIME", 20))
 		message = message + fmt.Sprintf("\n\n")
 
 		for i := 0; i < len(instances.Reservations); i++ {
+			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].InstanceId, 22))
 			if len(instances.Reservations[i].Instances[0].Tags) > 0 {
 				message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].Tags[0].Value, 20))
 			} else {
 				message = message + fmt.Sprintf("| %s ", printValue(nil, 20))
 			}
-			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].InstanceId, 22))
 			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].InstanceType, 11))
 			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].State.Name, 9))
 			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].PublicDnsName, 55))
 			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].PublicIpAddress, 20))
 			message = message + fmt.Sprintf("| %s |", instances.Reservations[i].Instances[0].LaunchTime)
+			message = message + fmt.Sprintf("\n")
+		}
+		message = message + fmt.Sprintf("\n```\n")
+		return &gomatrix.HTMLMessage{message, "m.text", "org.matrix.custom.html", markdownRender(message)}, nil
+	}
+	return &gomatrix.TextMessage{"m.notice", "Cannot login into aws"}, nil
+}
+
+// Show a list of amazon images (ami)
+// Give me a list of all instances
+func (s *Service) cmdAwsImageShow(roomID, userID string, args []string) (interface{}, error) {
+	log.Info("Service: Aws: Show Images")
+
+	// Have to login first
+	sess := s.awsLogin(userID)
+
+	if sess != nil {
+		// create me a new ecs session and get out a list of all instances
+		ec := ec2.New(sess)
+		input := &ec2.DescribeImagesInput{
+			Filters: []*ec2.Filter{
+				{
+					Name: aws.String("image-type"),
+					Values: []*string{
+						aws.String("kernel"),
+					},
+				},
+				{
+					Name: aws.String("owner-alias"),
+					Values: []*string{
+						aws.String("amazon"),
+					},
+				},
+			},
+		}
+		images, err := ec.DescribeImages(input)
+		if err != nil {
+			return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("Didnt go a list of instances: %s", err)}, nil
+		}
+
+		// Well, now we have all images in a nice structure, so print them out
+		var message string
+		message = fmt.Sprintf("##### Images List")
+		message = message + fmt.Sprintf("\n```\n")
+
+		// To make it more pretty, we nead a header
+		message = message + fmt.Sprintf("| %s ", printValueStr("IMAGEID", 13))
+		message = message + fmt.Sprintf("| %s ", printValueStr("NAME", 50))
+		message = message + fmt.Sprintf("| %s ", printValueStr("DESCRIPTION", 50))
+
+		length := len(images.Images)
+		log.Info(fmt.Sprintf("%d", length))
+		for i := 0; i < length; i++ {
+			log.Info(images.Images[i])
+			message = message + fmt.Sprintf("| %s ", printValue(images.Images[i].ImageId, 13))
+			message = message + fmt.Sprintf("| %s ", printValue(images.Images[i].Name, 50))
+			message = message + fmt.Sprintf("| %s ", printValue(images.Images[i].Description, 50))
 			message = message + fmt.Sprintf("\n")
 		}
 		message = message + fmt.Sprintf("\n```\n")
