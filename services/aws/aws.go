@@ -49,7 +49,7 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 				message = message + fmt.Sprintf("instance start\n==============\n \t Instance Id: Start the Instance \n\n")
 				message = message + fmt.Sprintf("instance stop\n==============\n \t Instance Id: Stop the Instance \n\n")
 				message = message + fmt.Sprintf("instance show\n==============\n \t Show you a list of your instances \n\n")
-				message = message + fmt.Sprintf("image search\n==============\n \t store : [marketplace|amazon|microsoft|all] where so search\n\t name : query string to search a image \n\n")
+				message = message + fmt.Sprintf("image search\n==============\n \t store : [marketplace|amazon|microsoft|all] where so search\n\t name : query string to search a image (case sensitive) \n\n")
 				message = message + fmt.Sprintf("```\n")
 
 				return &gomatrix.HTMLMessage{message, "m.text", "org.matrix.custom.html", markdownRender(message)}, nil
@@ -194,6 +194,7 @@ func (s *Service) cmdAwsInstanceShow(roomID, userID string, args []string) (inte
 		message = message + fmt.Sprintf("| %s ", printValueStr("STATE", 9))
 		message = message + fmt.Sprintf("| %s ", printValueStr("PUBLICDNS", 55))
 		message = message + fmt.Sprintf("| %s ", printValueStr("PUBLICIP", 20))
+		message = message + fmt.Sprintf("| %s ", printValueStr("REGION", 20))
 		message = message + fmt.Sprintf("| %s |", printValueStr("LAUNCHTIME", 20))
 		message = message + fmt.Sprintf("\n\n")
 
@@ -208,6 +209,7 @@ func (s *Service) cmdAwsInstanceShow(roomID, userID string, args []string) (inte
 			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].State.Name, 9))
 			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].PublicDnsName, 55))
 			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].PublicIpAddress, 20))
+			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].Placement.AvailabilityZone, 20))
 			message = message + fmt.Sprintf("| %s |", instances.Reservations[i].Instances[0].LaunchTime)
 			message = message + fmt.Sprintf("\n")
 		}
@@ -227,7 +229,7 @@ func (s *Service) cmdAwsImageSearch(roomID, userID, ownerAlias string, args []st
 	}
 
 	searchString := strings.Replace(args[0], "*", "", -1)
-	if len(searchString) < 5 {
+	if len(searchString) < 4 {
 		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf(`Your search string is to short my friend!`)}, nil
 	}
 	// Have to login first
@@ -354,6 +356,10 @@ func (s *Service) getCredentials(userID string) (string, string, string, string)
 // loginto the aws
 func (s *Service) awsLogin(userID string) *session.Session {
 	AccessKey, SecretAccessKey, AccessToken, Region := s.getCredentials(userID)
+
+	if AccessKey == "" {
+		return nil
+	}
 
 	sess, err := session.NewSession(&aws.Config{
 		Region:      aws.String(Region),

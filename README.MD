@@ -56,3 +56,12 @@ go get github.com/aws/aws-sdk-go
 
 - Matrix API: https://www.matrix.org/docs/spec/r0.0.0/client_server.html
 - AWS API: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/setting-up.html
+
+# Changelog
+
+v0.0.1
+- aws: add show instances
+- aws: add start and stop of instances
+- aws: add search of images
+- invoice: add create of invoices
+- invoice: add view invoices of a user
