@@ -107,8 +107,8 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 	}
 }
 
-func (s *Service) cmdAwsInstanceCreate(roomID, userID, args []string) (interface{}, error) {
-	log.Info("Service: Aws: Show Images")
+func (s *Service) cmdAwsInstanceCreate(roomID, userID string, args []string) (interface{}, error) {
+	log.Info("Service: Aws: Instance Create")
 
 	if len(args) < 1 {
 		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf(`Missing parameters. Have a look with !invoice help`)}, nil
