@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/aws/aws-sdk-go/service/ec2"
+	"github.com/aws/aws-sdk-go/service/opsworks"
 
 	"../../types"
 	log "github.com/Sirupsen/logrus"
@@ -74,6 +75,12 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 			},
 		},
 		types.Command{
+			Path: []string{"aws", "instance", "create"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return s.cmdAwsInstanceCreate(roomID, userID, args)
+			},
+		},
+		types.Command{
 			Path: []string{"aws", "image", "search", "amazon"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return s.cmdAwsImageSearch(roomID, userID, "amazon", args)
@@ -100,6 +107,36 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 	}
 }
 
+func (s *Service) cmdAwsInstanceCreate(roomID, userID, args []string) (interface{}, error) {
+	log.Info("Service: Aws: Show Images")
+
+	if len(args) < 1 {
+		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf(`Missing parameters. Have a look with !invoice help`)}, nil
+	}
+
+	// Have to login first
+	sess := s.awsLogin(userID)
+
+	if sess != nil {
+		ops := opsworks.New(sess)
+
+		input := &opsworks.CreateInstanceInput{
+			Hostname: []*string{
+				aws.String("blub"),
+			},
+		}
+
+		instances, err := ops.CreateInstance(input)
+
+		if err != nil {
+			log.Info(instances)
+			return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("There is sth wrong. %s", err)}, nil
+		}
+
+	}
+	return &gomatrix.TextMessage{"m.notice", "Cannot login into aws"}, nil
+}
+
 // Stop the aws instance
 func (s *Service) cmdAwsInstanceStop(roomID, userID string, args []string) (interface{}, error) {
 	instanceId := args[0]
@@ -123,7 +160,8 @@ func (s *Service) cmdAwsInstanceStop(roomID, userID string, args []string) (inte
 		}
 		instances, err := ec.StopInstances(input)
 
-		if err != nil && instances != nil {
+		if err != nil {
+			log.Info(instances)
 			return &gomatrix.TextMessage{"m.notice", "Dont know whats wrong. But I cannot stop the instance."}, nil
 		}
 
