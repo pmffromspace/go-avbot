@@ -3,6 +3,7 @@ package aws
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/aws/aws-sdk-go/service/ec2"
 
@@ -47,7 +48,8 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 				message = message + fmt.Sprintf("```\n ")
 				message = message + fmt.Sprintf("instance start\n======\n \t Instance Id: Start the Instance \n\n")
 				message = message + fmt.Sprintf("instance stop\n======\n \t Instance Id: Stop the Instance \n\n")
-				message = message + fmt.Sprintf("instance show\n======\n \t Give out a list of all instances \n\n")
+				message = message + fmt.Sprintf("instance show\n======\n \t Show you a list of your instances \n\n")
+				message = message + fmt.Sprintf("image search\n======\n \t marketplace|amazon|microsoft| all \n\t name: query string to search a image \n\n")
 				message = message + fmt.Sprintf("```\n ")
 				return &gomatrix.HTMLMessage{message, "m.text", "org.matrix.custom.html", markdownRender(message)}, nil
 			},
@@ -71,9 +73,27 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 			},
 		},
 		types.Command{
-			Path: []string{"aws", "image", "show"},
+			Path: []string{"aws", "image", "search", "amazon"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
-				return s.cmdAwsImageShow(roomID, userID, args)
+				return s.cmdAwsImageSearch(roomID, userID, "amazon", args)
+			},
+		},
+		types.Command{
+			Path: []string{"aws", "image", "search", "marketplace"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return s.cmdAwsImageSearch(roomID, userID, "aws-marketplace", args)
+			},
+		},
+		types.Command{
+			Path: []string{"aws", "image", "search", "microsoft"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return s.cmdAwsImageSearch(roomID, userID, "microsoft", args)
+			},
+		},
+		types.Command{
+			Path: []string{"aws", "image", "search", "all"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return s.cmdAwsImageSearch(roomID, userID, "*", args)
 			},
 		},
 	}
@@ -82,6 +102,10 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 // Stop the aws instance
 func (s *Service) cmdAwsInstanceStop(roomID, userID string, args []string) (interface{}, error) {
 	instanceId := args[0]
+
+	if len(args) < 1 {
+		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf(`Missing parameters. Have a look with !invoice help"`)}, nil
+	}
 
 	log.Info("Service: Aws: Stop Instance: ", instanceId)
 
@@ -110,6 +134,10 @@ func (s *Service) cmdAwsInstanceStop(roomID, userID string, args []string) (inte
 
 // Start the aws instance
 func (s *Service) cmdAwsInstanceStart(roomID, userID string, args []string) (interface{}, error) {
+	if len(args) < 1 {
+		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf(`Missing parameters. Have a look with !invoice help"`)}, nil
+	}
+
 	instanceId := args[0]
 
 	log.Info("Service: Aws: Start Instance: ", instanceId)
@@ -190,9 +218,17 @@ func (s *Service) cmdAwsInstanceShow(roomID, userID string, args []string) (inte
 
 // Show a list of amazon images (ami)
 // Give me a list of all instances
-func (s *Service) cmdAwsImageShow(roomID, userID string, args []string) (interface{}, error) {
+func (s *Service) cmdAwsImageSearch(roomID, userID, ownerAlias string, args []string) (interface{}, error) {
 	log.Info("Service: Aws: Show Images")
 
+	if len(args) < 1 {
+		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf(`Missing parameters. Have a look with !invoice help`)}, nil
+	}
+
+	searchString := strings.Replace(args[0], "*", "", -1)
+	if len(searchString) < 5 {
+		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf(`Your search string is to short my friend!`)}, nil
+	}
 	// Have to login first
 	sess := s.awsLogin(userID)
 
@@ -204,13 +240,31 @@ func (s *Service) cmdAwsImageShow(roomID, userID string, args []string) (interfa
 				{
 					Name: aws.String("image-type"),
 					Values: []*string{
-						aws.String("kernel"),
+						aws.String("machine"),
 					},
 				},
 				{
 					Name: aws.String("owner-alias"),
 					Values: []*string{
-						aws.String("amazon"),
+						aws.String(ownerAlias),
+					},
+				},
+				{
+					Name: aws.String("state"),
+					Values: []*string{
+						aws.String("available"),
+					},
+				},
+				{
+					Name: aws.String("is-public"),
+					Values: []*string{
+						aws.String("true"),
+					},
+				},
+				{
+					Name: aws.String("description"),
+					Values: []*string{
+						aws.String("*" + searchString + "*"),
 					},
 				},
 			},
@@ -227,19 +281,31 @@ func (s *Service) cmdAwsImageShow(roomID, userID string, args []string) (interfa
 
 		// To make it more pretty, we nead a header
 		message = message + fmt.Sprintf("| %s ", printValueStr("IMAGEID", 13))
-		message = message + fmt.Sprintf("| %s ", printValueStr("NAME", 50))
-		message = message + fmt.Sprintf("| %s ", printValueStr("DESCRIPTION", 50))
+		message = message + fmt.Sprintf("| %s ", printValueStr("DESCRIPTION", 100))
+		message = message + fmt.Sprintf("| %s ", printValueStr("NAME", 100))
+		message = message + fmt.Sprintf("| %s ", printValueStr("HYPERVISOR", 15))
+		message = message + fmt.Sprintf("| %s ", printValueStr("ARCHITECTURE", 15))
+		message = message + fmt.Sprintf("\n")
 
 		length := len(images.Images)
 		log.Info(fmt.Sprintf("%d", length))
-		for i := 0; i < length; i++ {
-			log.Info(images.Images[i])
+		for i := 0; i < length && i < 30; i++ {
 			message = message + fmt.Sprintf("| %s ", printValue(images.Images[i].ImageId, 13))
-			message = message + fmt.Sprintf("| %s ", printValue(images.Images[i].Name, 50))
-			message = message + fmt.Sprintf("| %s ", printValue(images.Images[i].Description, 50))
+			message = message + fmt.Sprintf("| %s ", printValue(images.Images[i].Description, 100))
+			message = message + fmt.Sprintf("| %s ", printValue(images.Images[i].Name, 100))
+			message = message + fmt.Sprintf("| %s ", printValue(images.Images[i].Hypervisor, 15))
+			message = message + fmt.Sprintf("| %s ", printValue(images.Images[i].Architecture, 15))
 			message = message + fmt.Sprintf("\n")
 		}
+
 		message = message + fmt.Sprintf("\n```\n")
+
+		if length > 30 {
+			message = message + fmt.Sprintf("\n")
+			message = message + fmt.Sprintf("There are %d more results. Please use a better query string.", length-30)
+			message = message + fmt.Sprintf("\n")
+		}
+
 		return &gomatrix.HTMLMessage{message, "m.text", "org.matrix.custom.html", markdownRender(message)}, nil
 	}
 	return &gomatrix.TextMessage{"m.notice", "Cannot login into aws"}, nil
