@@ -45,12 +45,13 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				var message string
 				message = fmt.Sprintf("##### Help \n")
-				message = message + fmt.Sprintf("```\n ")
-				message = message + fmt.Sprintf("instance start\n======\n \t Instance Id: Start the Instance \n\n")
-				message = message + fmt.Sprintf("instance stop\n======\n \t Instance Id: Stop the Instance \n\n")
-				message = message + fmt.Sprintf("instance show\n======\n \t Show you a list of your instances \n\n")
-				message = message + fmt.Sprintf("image search\n======\n \t marketplace|amazon|microsoft| all \n\t name: query string to search a image \n\n")
-				message = message + fmt.Sprintf("```\n ")
+				message = message + fmt.Sprintf("```\n")
+				message = message + fmt.Sprintf("instance start\n==============\n \t Instance Id: Start the Instance \n\n")
+				message = message + fmt.Sprintf("instance stop\n==============\n \t Instance Id: Stop the Instance \n\n")
+				message = message + fmt.Sprintf("instance show\n==============\n \t Show you a list of your instances \n\n")
+				message = message + fmt.Sprintf("image search\n==============\n \t store : [marketplace|amazon|microsoft|all] where so search\n\t name : query string to search a image \n\n")
+				message = message + fmt.Sprintf("```\n")
+
 				return &gomatrix.HTMLMessage{message, "m.text", "org.matrix.custom.html", markdownRender(message)}, nil
 			},
 		},
