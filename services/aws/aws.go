@@ -120,11 +120,7 @@ func (s *Service) cmdAwsInstanceCreate(roomID, userID string, args []string) (in
 	if sess != nil {
 		ops := opsworks.New(sess)
 
-		input := &opsworks.CreateInstanceInput{
-			Hostname: []*string{
-				aws.String("blub"),
-			},
-		}
+		input := &opsworks.CreateInstanceInput{}
 
 		instances, err := ops.CreateInstance(input)
 
