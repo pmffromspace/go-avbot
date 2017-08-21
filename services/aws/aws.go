@@ -24,6 +24,8 @@ const ServiceType = "aws"
 // Service represents the AWS service. It has no Config fields.
 type Service struct {
 	types.DefaultService
+	// All Region we want to work
+	Regions string
 	// The Usermaping to the AWS Keys
 	Users map[string]struct {
 		// AWS AccessKey
@@ -32,8 +34,8 @@ type Service struct {
 		SecretAccessKey string
 		// AWS Token
 		AccessToken string
-		// AWS Region
-		Region string
+		// AWS Default Region
+		DefaultRegion string
 	}
 }
 
@@ -47,8 +49,8 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 				var message string
 				message = fmt.Sprintf("##### Help \n")
 				message = message + fmt.Sprintf("```\n")
-				message = message + fmt.Sprintf("instance start\n==============\n \t Instance Id: Start the Instance \n\n")
-				message = message + fmt.Sprintf("instance stop\n==============\n \t Instance Id: Stop the Instance \n\n")
+				message = message + fmt.Sprintf("instance start\n==============\n \t InstanceId : Start the Instance \n \t Region : The AWS Region \n\n")
+				message = message + fmt.Sprintf("instance stop\n==============\n \t InstanceId : Stop the Instance \n \t Region : The AWS Region \n\n")
 				message = message + fmt.Sprintf("instance show\n==============\n \t Show you a list of your instances \n\n")
 				message = message + fmt.Sprintf("image search\n==============\n \t store : [marketplace|amazon|microsoft|all] where so search\n\t name : query string to search a image (case sensitive) \n\n")
 				message = message + fmt.Sprintf("```\n")
@@ -135,16 +137,23 @@ func (s *Service) cmdAwsInstanceCreate(roomID, userID string, args []string) (in
 
 // Stop the aws instance
 func (s *Service) cmdAwsInstanceStop(roomID, userID string, args []string) (interface{}, error) {
-	instanceId := args[0]
-
 	if len(args) < 1 {
 		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf(`Missing parameters. Have a look with !invoice help"`)}, nil
+	}
+
+	instanceId := args[0]
+
+	// Which region the user is workign
+	region := s.getDefaultRegion(userID)
+	if len(args) == 2 {
+		// stpp the instance in this region
+		region = args[1]
 	}
 
 	log.Info("Service: Aws: Stop Instance: ", instanceId)
 
 	// have to login first to get a aws session
-	sess := s.awsLogin(userID)
+	sess := s.awsLoginRegion(userID, region)
 
 	if sess != nil {
 		// to start a instance, we need a ec2 session
@@ -175,10 +184,17 @@ func (s *Service) cmdAwsInstanceStart(roomID, userID string, args []string) (int
 
 	instanceId := args[0]
 
+	// Which region the user is workign
+	region := s.getDefaultRegion(userID)
+	if len(args) == 2 {
+		// start the instance in this region
+		region = args[1]
+	}
+
 	log.Info("Service: Aws: Start Instance: ", instanceId)
 
 	// have to login first to get a aws session
-	sess := s.awsLogin(userID)
+	sess := s.awsLoginRegion(userID, region)
 
 	if sess != nil {
 		// to start a instance, we need a ec2 session
@@ -192,7 +208,7 @@ func (s *Service) cmdAwsInstanceStart(roomID, userID string, args []string) (int
 		instances, err := ec.StartInstances(input)
 
 		if err != nil && instances != nil {
-			return &gomatrix.TextMessage{"m.notice", "Dont know whats wrong. But I cannot start the instance."}, nil
+			return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("Dont know whats wrong. But I cannot start the instance. %s", err)}, nil
 		}
 
 		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("Instance is running")}, nil
@@ -201,56 +217,71 @@ func (s *Service) cmdAwsInstanceStart(roomID, userID string, args []string) (int
 	return &gomatrix.TextMessage{"m.notice", "Cannot login into aws"}, nil
 }
 
-// Give me a list of all instances
+// Wrapper function to get all instances of every region
 func (s *Service) cmdAwsInstanceShow(roomID, userID string, args []string) (interface{}, error) {
 	log.Info("Service: Aws: Show Instance")
 
-	// Have to login first
-	sess := s.awsLogin(userID)
+	var message string
 
-	if sess != nil {
-		// create me a new ecs session and get out a list of all instances
-		ec := ec2.New(sess)
+	message = fmt.Sprintf("##### Instance List")
+	message = message + fmt.Sprintf("\n```\n")
+	// To make it more pretty, we nead a header
+	message = message + fmt.Sprintf("| %s ", printValueStr("INSTANCEID", 22))
+	message = message + fmt.Sprintf("| %s ", printValueStr("NAME", 20))
+	message = message + fmt.Sprintf("| %s ", printValueStr("TYPE", 11))
+	message = message + fmt.Sprintf("| %s ", printValueStr("STATE", 9))
+	message = message + fmt.Sprintf("| %s ", printValueStr("PUBLICDNS", 55))
+	message = message + fmt.Sprintf("| %s ", printValueStr("PUBLICIP", 20))
+	message = message + fmt.Sprintf("| %s ", printValueStr("REGION", 20))
+	message = message + fmt.Sprintf("| %s |", printValueStr("LAUNCHTIME", 20))
+	message = message + fmt.Sprintf("\n\n")
 
-		instances, err := ec.DescribeInstances(nil)
-		if err != nil {
-			return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("Didnt go a list of instances: %s", err)}, nil
-		}
-		// Well, now we have all instances in a nice structure, so print them out
-		var message string
-		message = fmt.Sprintf("##### Instance List")
-		message = message + fmt.Sprintf("\n```\n")
+	region := strings.Split(s.Regions, ",")
 
-		// To make it more pretty, we nead a header
-		message = message + fmt.Sprintf("| %s ", printValueStr("INSTANCEID", 22))
-		message = message + fmt.Sprintf("| %s ", printValueStr("NAME", 20))
-		message = message + fmt.Sprintf("| %s ", printValueStr("TYPE", 11))
-		message = message + fmt.Sprintf("| %s ", printValueStr("STATE", 9))
-		message = message + fmt.Sprintf("| %s ", printValueStr("PUBLICDNS", 55))
-		message = message + fmt.Sprintf("| %s ", printValueStr("PUBLICIP", 20))
-		message = message + fmt.Sprintf("| %s ", printValueStr("REGION", 20))
-		message = message + fmt.Sprintf("| %s |", printValueStr("LAUNCHTIME", 20))
-		message = message + fmt.Sprintf("\n\n")
+	for v, b := range region {
+		// Have to login first
+		sess := s.awsLoginRegion(userID, b)
 
-		for i := 0; i < len(instances.Reservations); i++ {
-			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].InstanceId, 22))
-			if len(instances.Reservations[i].Instances[0].Tags) > 0 {
-				message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].Tags[0].Value, 20))
-			} else {
-				message = message + fmt.Sprintf("| %s ", printValue(nil, 20))
+		if sess != nil {
+			// create me a new ecs session and get out a list of all instances
+			ec := ec2.New(sess)
+			instances, err := ec.DescribeInstances(nil)
+			if err != nil {
+				return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("Didnt got a list of instances: %s %d", err, v)}, nil
 			}
-			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].InstanceType, 11))
-			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].State.Name, 9))
-			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].PublicDnsName, 55))
-			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].PublicIpAddress, 20))
-			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].Placement.AvailabilityZone, 20))
-			message = message + fmt.Sprintf("| %s |", instances.Reservations[i].Instances[0].LaunchTime)
-			message = message + fmt.Sprintf("\n")
+
+			message = message + s.cmdAwsInstanceShowRegion(roomID, userID, b, instances)
+		} else {
+			return &gomatrix.TextMessage{"m.notice", "Cannot login into aws"}, nil
 		}
-		message = message + fmt.Sprintf("\n```\n")
-		return &gomatrix.HTMLMessage{message, "m.text", "org.matrix.custom.html", markdownRender(message)}, nil
 	}
-	return &gomatrix.TextMessage{"m.notice", "Cannot login into aws"}, nil
+	message = message + fmt.Sprintf("\n```\n")
+	return &gomatrix.HTMLMessage{message, "m.text", "org.matrix.custom.html", markdownRender(message)}, nil
+}
+
+// Give me a list of all instances from a region
+func (s *Service) cmdAwsInstanceShowRegion(roomID, userID, region string, instances *ec2.DescribeInstancesOutput) string {
+	log.Info("Service: Aws: Show Instance of Region: ", region)
+
+	var message string
+
+	for i := 0; i < len(instances.Reservations); i++ {
+		message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].InstanceId, 22))
+		if len(instances.Reservations[i].Instances[0].Tags) > 0 {
+			message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].Tags[0].Value, 20))
+		} else {
+			message = message + fmt.Sprintf("| %s ", printValue(nil, 20))
+		}
+		message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].InstanceType, 11))
+		message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].State.Name, 9))
+		message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].PublicDnsName, 55))
+		message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].PublicIpAddress, 20))
+		message = message + fmt.Sprintf("| %s ", printValue(instances.Reservations[i].Instances[0].Placement.AvailabilityZone, 20))
+		message = message + fmt.Sprintf("| %s |", instances.Reservations[i].Instances[0].LaunchTime)
+		message = message + fmt.Sprintf("\n")
+	}
+
+	return message
 }
 
 // Show a list of amazon images (ami)
@@ -377,19 +408,34 @@ func printValue(message *string, length int) string {
 }
 
 // get the aws credentials of a user
+func (s *Service) getDefaultRegion(userID string) string {
+	userConfig := s.Users[userID]
+	return userConfig.DefaultRegion
+}
+
+// get the default region
 func (s *Service) getCredentials(userID string) (string, string, string, string) {
 	for localUserID, userConfig := range s.Users {
 		if localUserID == userID {
-			return userConfig.AccessKey, userConfig.SecretAccessKey, userConfig.AccessToken, userConfig.Region
+			return userConfig.AccessKey, userConfig.SecretAccessKey, userConfig.AccessToken, userConfig.DefaultRegion
 		}
 	}
 
 	return "", "", "", ""
 }
 
-// loginto the aws
+// loginto the aws without region
 func (s *Service) awsLogin(userID string) *session.Session {
+	return s.awsLoginRegion(userID, "")
+}
+
+// loginto the aws with a region
+func (s *Service) awsLoginRegion(userID, region string) *session.Session {
 	AccessKey, SecretAccessKey, AccessToken, Region := s.getCredentials(userID)
+
+	if region != "" {
+		Region = region
+	}
 
 	if AccessKey == "" {
 		return nil
@@ -401,7 +447,7 @@ func (s *Service) awsLogin(userID string) *session.Session {
 	})
 
 	if err != nil {
-		log.Info("Service: Aws: Start Instance Error: ", err)
+		log.Info("Service: Aws: Start Login Error: ", err)
 		return nil
 	}
 	return sess
