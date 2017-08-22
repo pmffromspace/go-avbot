@@ -18,6 +18,7 @@ import (
 	_ "./services/echo"
 	_ "./services/github"
 	_ "./services/invoice"
+	_ "./services/pentest"
 	"./types"
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/dugong"
