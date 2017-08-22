@@ -60,7 +60,7 @@ go get github.com/aws/aws-sdk-go
 # Changelog
 
 v0.0.1
-- aws: add show instances
+- aws: add show instances of all configured regions
 - aws: add start and stop of instances
 - aws: add search of images
 - invoice: add create of invoices
