@@ -65,3 +65,6 @@ v0.0.1
 - aws: add search of images
 - invoice: add create of invoices
 - invoice: add view invoices of a user
+
+v0.0.2
+- pentest: add empty pentest service
