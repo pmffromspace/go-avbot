@@ -68,3 +68,4 @@ v0.0.1
 
 v0.0.2
 - pentest: add empty pentest service
+- aws: add run instances

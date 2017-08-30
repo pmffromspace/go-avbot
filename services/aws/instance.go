@@ -9,11 +9,15 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ec2"
-	"github.com/aws/aws-sdk-go/service/opsworks"
 )
 
-func (s *Service) cmdAwsInstanceCreate(roomID, userID string, args []string) (interface{}, error) {
-	log.Info("Service: Aws: Instance Create")
+func (s *Service) cmdAwsInstanceRun(roomID, userID string, args []string) (interface{}, error) {
+	log.Info("Service: Aws: Instance Run")
+	amiId := args[0]
+	instanceType := args[1]
+	//hostname := args[1]
+	//subnet := args[2]
+	//sshKeyName := args[2]
 
 	if len(args) < 1 {
 		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf(`Missing parameters. Have a look with !invoice help`)}, nil
@@ -23,11 +27,25 @@ func (s *Service) cmdAwsInstanceCreate(roomID, userID string, args []string) (in
 	sess := s.awsLogin(userID)
 
 	if sess != nil {
-		ops := opsworks.New(sess)
+		ec := ec2.New(sess)
 
-		input := &opsworks.CreateInstanceInput{}
+		input := &ec2.RunInstancesInput{
+			ImageId:      aws.String(amiId),
+			InstanceType: aws.String(instanceType),
+			MinCount:     aws.Int64(1),
+			MaxCount:     aws.Int64(1),
 
-		instances, err := ops.CreateInstance(input)
+			/*
+				TagSpecifications: []*ec2.TagSpecification{
+					Tags: []*ec2.Tag{
+						Key:   aws.String("name"),
+						Value: aws.String(hostname),
+					},
+				},
+			*/
+		}
+
+		instances, err := ec.RunInstances(input)
 
 		if err != nil {
 			log.Info(instances)

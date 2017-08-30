@@ -48,6 +48,7 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 				message = message + fmt.Sprintf("instance start\n==============\n \t InstanceId : Start the Instance \n \t Region : The AWS Region \n\n")
 				message = message + fmt.Sprintf("instance stop\n==============\n \t InstanceId : Stop the Instance \n \t Region : The AWS Region \n\n")
 				message = message + fmt.Sprintf("instance show\n==============\n \t Show you a list of your instances \n\n")
+				message = message + fmt.Sprintf("instance run\n==============\n \t AmiID : AMI ID of the Image to run \n \t InstanceType : Instance Type like t2.micro  \n\n")
 				message = message + fmt.Sprintf("image search\n==============\n \t store : [marketplace|amazon|microsoft|all] where so search\n\t name : query string to search a image (case sensitive) \n\n")
 				message = message + fmt.Sprintf("```\n")
 
@@ -73,9 +74,9 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 			},
 		},
 		types.Command{
-			Path: []string{"aws", "instance", "create"},
+			Path: []string{"aws", "instance", "run"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
-				return s.cmdAwsInstanceCreate(roomID, userID, args)
+				return s.cmdAwsInstanceRun(roomID, userID, args)
 			},
 		},
 		types.Command{
@@ -110,7 +111,7 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 func (s *Service) cmdAwsImageSearch(roomID, userID, ownerAlias string, args []string) (interface{}, error) {
 	log.Info("Service: Aws: Show Images")
 
-	if len(args) < 1 {
+	if len(args) < 2 {
 		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf(`Missing parameters. Have a look with !invoice help`)}, nil
 	}
 
@@ -118,6 +119,7 @@ func (s *Service) cmdAwsImageSearch(roomID, userID, ownerAlias string, args []st
 	if len(searchString) < 4 {
 		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf(`Your search string is to short my friend!`)}, nil
 	}
+
 	// Have to login first
 	sess := s.awsLogin(userID)
 
