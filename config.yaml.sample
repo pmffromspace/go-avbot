@@ -74,6 +74,8 @@ services:
     Config:
       OpenVASIP: "127.0.0.1"
       OpenVASPort: "9390"
+      OpenVASUsername: "admin"      
+      OpenVASPassword: "admin"         
       AllowedUsers: "@YOUR_USER_ID:localhost,@ANOTHER_USER_ID:localhost"      
 
   - ID: aws_cmd_service"
