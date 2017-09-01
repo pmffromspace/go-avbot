@@ -1,0 +1,49 @@
+diff -crB gomatrix.orig/client.go gomatrix/client.go
+*** gomatrix.orig/client.go	2017-09-02 00:49:39.616058360 +0200
+--- gomatrix/client.go	2017-09-02 00:46:47.402188347 +0200
+***************
+*** 472,477 ****
+--- 472,488 ----
+  		})
+  }
+  
++ // SendImage send an m.room.message event intor the given room with a msgtyope of m.file
++ // See https://matrix.org/docs/spec/client_server/r0.2.0.html#m-file
++ func (cli *Client) SendFile(roomID, body, url string) (*RespSendEvent, error) {
++ 	return cli.SendMessageEvent(roomID, "m.room.message",
++ 		FileMessage{
++ 			MsgType: "m.file",
++ 			Body:    body,
++ 			URL:     url,
++ 		})
++ }
++ 
+  // SendNotice sends an m.room.message event into the given room with a msgtype of m.notice
+  // See http://matrix.org/docs/spec/client_server/r0.2.0.html#m-notice
+  func (cli *Client) SendNotice(roomID, text string) (*RespSendEvent, error) {
+diff -crB gomatrix.orig/events.go gomatrix/events.go
+*** gomatrix.orig/events.go	2017-09-02 00:49:39.616058360 +0200
+--- gomatrix/events.go	2017-09-02 01:06:03.812454272 +0200
+***************
+*** 86,91 ****
+--- 86,103 ----
+  	Format        string `json:"format"`
+  	FormattedBody string `json:"formatted_body"`
+  }
++ // An FileMessage is the contents of a MATRIX File upload
++ type FileMessage struct {
++ 	Body          string `json:"body"`
++ 	MsgType       string `json:"msgtype"`
++ 	URL     string    `json:"url"`
++ 	Info    FileInfo `json:"info"`
++ }
++ 
++ type FileInfo struct {
++ 	MimeType string `json:"mimetype"`
++ 	Size int64 `json:size"` 
++ }
+  
+  var htmlRegex = regexp.MustCompile("<[^<]+?>")
+  
+Nur in gomatrix: .events.go.swp.
+Binärdateien gomatrix.orig/.git/index und gomatrix/.git/index sind verschieden.

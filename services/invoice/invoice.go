@@ -33,11 +33,12 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				var message string
 				message = fmt.Sprintf("##### Help \n")
-				message = message + fmt.Sprintf("```\n ")
+				message = message + fmt.Sprintf("```\n")
 				message = message + fmt.Sprintf("create\n======\n \t customer : customer name\n \t unitprice : unitprice in format NNN.NN\n \t quantity : the quantity of the unit\n \t period : [once|month] how often the invoice should be recur\n \t description : A very short description of the invoice\n\n")
 				message = message + fmt.Sprintf("get\n======\n \t customer : customer name\n\n")
 				message = message + fmt.Sprintf("acl\n======\n \t Give a list of all allowed users\n\n")
-				message = message + fmt.Sprintf("```\n ")
+				message = message + fmt.Sprintf("```\n")
+
 				return &gomatrix.HTMLMessage{message, "m.text", "org.matrix.custom.html", markdownRender(message)}, nil
 			},
 		},
