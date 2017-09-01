@@ -67,5 +67,6 @@ v0.0.1
 - invoice: add view invoices of a user
 
 v0.0.2
-- pentest: add empty pentest service
+- pentest: give out a list of all scanner configs
+- pentest: start a pentest
 - aws: add run instances
