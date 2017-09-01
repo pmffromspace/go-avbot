@@ -9,7 +9,7 @@ Our Kanban Board is [here](https://wekan.aventer.biz/b/XePZjKD4mK3eFY8MS/go-avbo
 go-neb is under the Apache License. To make it more complicated, our code are under GPL. These are:
 - aws (services/aws)
 - invoice (services/invoice)
-
+- pentest (services/pentest)
 
 # What is go-avbot
 
@@ -56,6 +56,7 @@ go get github.com/aws/aws-sdk-go
 
 - Matrix API: https://www.matrix.org/docs/spec/r0.0.0/client_server.html
 - AWS API: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/setting-up.html
+- OpenVAS: http://docs.greenbone.net/API/OMP/omp-7.0.html
 
 # Changelog
 
@@ -69,4 +70,6 @@ v0.0.1
 v0.0.2
 - pentest: give out a list of all scanner configs
 - pentest: start a pentest
+- pentest: get a status of the pentest
+- pentest: download the report file
 - aws: add run instances
