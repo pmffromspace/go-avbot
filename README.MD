@@ -1,7 +1,7 @@
+# What is go-avbot
 
-We share all our software under OpenSource License. If you like what we are doing, it would be nice if you donate a small fee. 
+AVBOT is our digital working partner. He is helping us with our daily business. From creating and sending out invoices to install server applications. AVBOT is based on [go-neb](https://github.com/matrix-org/go-neb), a matrix BOT developed in golang. 
 
-[![Donate](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/AVENTER/donate)
 
 Our Kanban Board is [here](https://wekan.aventer.biz/b/XePZjKD4mK3eFY8MS/go-avbot)
 
@@ -11,25 +11,24 @@ go-neb is under the Apache License. To make it more complicated, our code are un
 - invoice (services/invoice)
 - pentest (services/pentest)
 
-# What is go-avbot
-
-AVBOT is our digital working partner. He is helping us with our daily business. From creating and sending out invoices to install server applications. AVBOT is based on [go-neb](https://github.com/matrix-org/go-neb), a matrix BOT developed in golang. 
-
 # Features
 
 ### AWS
-  #### EC2
-    - Userspecified Access Key configuration
-    - Start/Stop of AWS instances
-    - Show AWS List and infos of all AWS instances
 
-### Github
-- Monitor repositories and create webhooks of them
-- Create issues to repos
+- Start/Stop of AWS instances
+- Show list of all instances in all regions
+- Create Instances 
+- Search AMI's
 
 ### Ispconfig
+
 - Create Invoice and send them out
 - Show invoices of a user
+
+### Pentest
+
+- Penetrate a server target
+- Create a report about the penetrations test result and upload it into the chat room
 
 There are still a lot of work. Currently our main focus is the AWS support.
 
@@ -73,3 +72,5 @@ v0.0.2
 - pentest: get a status of the pentest
 - pentest: download the report file
 - aws: add run instances
+
+v0.0.3
