@@ -156,22 +156,22 @@ func loadDatabase(databaseType, databaseURL, configYAML string) (*database.Servi
 	return db, err
 }
 
-func setup(e envVars, mux *http.ServeMux, matrixClient *http.Client) {
-	err := types.BaseURL(e.BaseURL)
+func setup(mux *http.ServeMux, matrixClient *http.Client) {
+	err := types.BaseURL(BaseURL)
 	if err != nil {
 		log.WithError(err).Panic("Failed to get base url")
 	}
 
-	db, err := loadDatabase(e.DatabaseType, e.DatabaseURL, e.ConfigFile)
+	db, err := loadDatabase(DatabaseType, DatabaseURL, ConfigFile)
 	if err != nil {
 		log.WithError(err).Panic("Failed to open database")
 	}
 
 	// Populate the database from the config file if one was supplied.
 	var cfg *api.ConfigFile
-	if e.ConfigFile != "" {
-		if cfg, err = loadFromConfig(db, e.ConfigFile); err != nil {
-			log.WithError(err).WithField("config_file", e.ConfigFile).Panic("Failed to load config file")
+	if ConfigFile != "" {
+		if cfg, err = loadFromConfig(db, ConfigFile); err != nil {
+			log.WithError(err).WithField("config_file", ConfigFile).Panic("Failed to load config file")
 		}
 		if err := db.InsertFromConfig(cfg); err != nil {
 			log.WithError(err).Panic("Failed to persist config data into in-memory DB")
@@ -196,7 +196,7 @@ func setup(e envVars, mux *http.ServeMux, matrixClient *http.Client) {
 
 	// Read exclusively from the config file if one was supplied.
 	// Otherwise, add HTTP listeners for new Services/Sessions/Clients/etc.
-	if e.ConfigFile != "" {
+	if ConfigFile != "" {
 		if err := insertServicesFromConfig(clients, cfg.Services); err != nil {
 			log.WithError(err).Panic("Failed to insert services")
 		}
@@ -217,30 +217,13 @@ func setup(e envVars, mux *http.ServeMux, matrixClient *http.Client) {
 	}
 }
 
-type envVars struct {
-	BindAddress  string
-	DatabaseType string
-	DatabaseURL  string
-	BaseURL      string
-	LogDir       string
-	ConfigFile   string
-}
-
 func main() {
-	e := envVars{
-		BindAddress:  BindAddress,
-		DatabaseType: DatabaseType,
-		DatabaseURL:  DatabaseURL,
-		BaseURL:      BaseURL,
-		LogDir:       LogDir,
-		ConfigFile:   ConfigFile,
-	}
 
-	if e.LogDir != "" {
+	if LogDir != "" {
 		log.AddHook(dugong.NewFSHook(
-			filepath.Join(e.LogDir, "info.log"),
-			filepath.Join(e.LogDir, "warn.log"),
-			filepath.Join(e.LogDir, "error.log"),
+			filepath.Join(LogDir, "info.log"),
+			filepath.Join(LogDir, "warn.log"),
+			filepath.Join(LogDir, "error.log"),
 			&log.TextFormatter{
 				TimestampFormat:  "2006-01-02 15:04:05.000000",
 				DisableColors:    true,
@@ -250,8 +233,8 @@ func main() {
 		))
 	}
 
-	log.Infof("GO-AVBOT (%+v)", e)
+	log.Infof("GO-AVBOT (%s %s %s %s %s %s)", BindAddress, BaseURL, DatabaseType, DatabaseURL, LogDir, ConfigFile)
 
-	setup(e, http.DefaultServeMux, http.DefaultClient)
-	log.Fatal(http.ListenAndServe(e.BindAddress, nil))
+	setup(http.DefaultServeMux, http.DefaultClient)
+	log.Fatal(http.ListenAndServe(BindAddress, nil))
 }
