@@ -98,6 +98,10 @@ func (s *Service) cmdCreateInvoice(roomID, userID string, args []string) (interf
 	reader := strings.NewReader(fmt.Sprintf(`{"func":"createInvoice","customer":"%s","unitprice":"%s","quantity":"%s","period":"%s","description":"%s"}`, customer, unitprice, quantity, period, description))
 	request, err := http.NewRequest("POST", "http://localhost:8888/jsonrpc.php", reader)
 
+	if err != nil {
+		return &gomatrix.TextMessage{"m.notice", "There is a connection error to the gateway"}, nil
+	}
+
 	client := &http.Client{}
 	res, err := client.Do(request)
 
@@ -114,6 +118,11 @@ func (s *Service) cmdCreateInvoice(roomID, userID string, args []string) (interf
 	}
 	var str Invoice
 	err = json.Unmarshal(body, &str)
+
+	if err != nil {
+		return &gomatrix.TextMessage{"m.notice", "There is a connection error to the gateway"}, nil
+	}
+
 	// create a list of invoices
 	var message string
 	message = fmt.Sprintf("##### Create Invoice: %s %s \n", customer, str.Data)
@@ -130,6 +139,10 @@ func (s *Service) cmdInvoiceGet(roomID, userID string, args []string) (interface
 	reader := strings.NewReader(fmt.Sprintf(`{"func":"getInvoicesOfClient","customer":"%s"}`, customer))
 	request, err := http.NewRequest("POST", "http://localhost:8888/jsonrpc.php", reader)
 
+	if err != nil {
+		return &gomatrix.TextMessage{"m.notice", "There is a connection error to the gateway"}, nil
+	}
+
 	client := &http.Client{}
 	res, err := client.Do(request)
 
@@ -146,6 +159,11 @@ func (s *Service) cmdInvoiceGet(roomID, userID string, args []string) (interface
 	}
 	var str Invoice
 	err = json.Unmarshal(body, &str)
+
+	if err != nil {
+		return &gomatrix.TextMessage{"m.notice", "There is a connection error to the gateway"}, nil
+	}
+
 	// create a list of invoices
 	var message string
 	message = fmt.Sprintf("##### Invoice: %s %s \n", str.Data[0].CompanyName, str.Data[0].ContactName)
