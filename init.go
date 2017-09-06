@@ -11,7 +11,7 @@ func init() {
 	flag.StringVar(&BASE_URL, "baseurl", "http://localhost:4050", "base url")
 
 	LOG_DIR = "./log"
-	CONFIG_FILE = "./config.yaml"
+	CONFIG_FILE = "./data/config.yaml"
 
 	flag.Parse()
 }

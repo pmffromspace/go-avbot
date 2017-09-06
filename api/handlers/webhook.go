@@ -8,7 +8,7 @@ import (
 	"../../clients"
 	"../../database"
 	"../../metrics"
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 // Webhook represents an HTTP handler capable of accepting webhook requests on behalf of services.

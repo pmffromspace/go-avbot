@@ -14,9 +14,9 @@ import (
 	"../../metrics"
 	"../../polling"
 	"../../types"
-	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/gomatrix"
 	"github.com/matrix-org/util"
+	log "github.com/sirupsen/logrus"
 )
 
 // ConfigureService represents an HTTP handler which can process /admin/configureService requests.

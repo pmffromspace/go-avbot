@@ -13,8 +13,8 @@ import (
 	"../../database"
 	"../../services/github/client"
 	"../../types"
-	log "github.com/Sirupsen/logrus"
 	"github.com/google/go-github/github"
+	log "github.com/sirupsen/logrus"
 )
 
 // RealmType of the Github Realm

@@ -35,7 +35,7 @@ There are still a lot of work. Currently our main focus is the AWS support.
 # Software Requirements
 
 ```
-go get github.com/Sirupsen/logrus 
+go get github.com/sirupsen/logrus 
 go get github.com/matrix-org/util
 go get github.com/mattn/go-sqlite3
 go get github.com/prometheus/client_golang/prometheus
@@ -45,7 +45,6 @@ go get github.com/mattn/go-shellwords
 go get gopkg.in/yaml.v2
 go get golang.org/x/oauth2
 go get github.com/google/go-github/github
-go get github.com/sirupsen/logrus
 go get gopkg.in/alecthomas/kingpin.v2
 go get github.com/russross/blackfriday
 go get github.com/aws/aws-sdk-go

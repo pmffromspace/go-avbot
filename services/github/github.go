@@ -17,9 +17,9 @@ import (
 	"../../realms/github"
 	"../../services/github/client"
 	"../../types"
-	log "github.com/Sirupsen/logrus"
 	gogithub "github.com/google/go-github/github"
 	"github.com/matrix-org/gomatrix"
+	log "github.com/sirupsen/logrus"
 )
 
 // ServiceType of the Github service

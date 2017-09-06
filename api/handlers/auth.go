@@ -11,8 +11,8 @@ import (
 	"../../database"
 	"../../metrics"
 	"../../types"
-	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/util"
+	log "github.com/sirupsen/logrus"
 )
 
 // RequestAuthSession represents an HTTP handler capable of processing /admin/requestAuthSession requests.

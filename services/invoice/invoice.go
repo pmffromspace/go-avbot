@@ -9,9 +9,9 @@ import (
 	"strings"
 
 	"../../types"
-	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/gomatrix"
 	"github.com/russross/blackfriday"
+	log "github.com/sirupsen/logrus"
 )
 
 // ServiceType of the Invoice service

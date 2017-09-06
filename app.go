@@ -20,11 +20,11 @@ import (
 	_ "./services/invoice"
 	_ "./services/pentest"
 	"./types"
-	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/dugong"
 	"github.com/matrix-org/util"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/prometheus/client_golang/prometheus"
+	log "github.com/sirupsen/logrus"
 
 	yaml "gopkg.in/yaml.v2"
 )

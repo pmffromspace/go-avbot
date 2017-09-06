@@ -11,9 +11,9 @@ import (
 	"../../services/github/client"
 	"../../services/github/webhook"
 	"../../types"
-	log "github.com/Sirupsen/logrus"
 	gogithub "github.com/google/go-github/github"
 	"github.com/matrix-org/gomatrix"
+	log "github.com/sirupsen/logrus"
 )
 
 // WebhookServiceType of the Github Webhook service.
