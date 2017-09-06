@@ -6,9 +6,9 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/AVENTER-UG/gomatrix"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/types"
-	"github.com/matrix-org/gomatrix"
 )
 
 var commandParseTests = []struct {
@@ -52,7 +52,7 @@ func (t MockTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 func TestCommandParsing(t *testing.T) {
 	var executedCmdArgs []string
 	cmds := []types.Command{
-		types.Command{
+		{
 			Path: []string{"test"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				executedCmdArgs = args

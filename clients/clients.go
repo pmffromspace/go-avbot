@@ -13,7 +13,7 @@ import (
 	"../matrix"
 	"../metrics"
 	"../types"
-	"github.com/matrix-org/gomatrix"
+	"github.com/AVENTER-UG/gomatrix"
 	shellwords "github.com/mattn/go-shellwords"
 	log "github.com/sirupsen/logrus"
 )
@@ -262,7 +262,7 @@ func runExpansionsForService(expans []types.Expansion, event *gomatrix.Event, bo
 		for _, matchingGroups := range expansion.Regexp.FindAllStringSubmatch(body, -1) {
 			matchingText := matchingGroups[0] // first element is always the complete match
 			if matches[matchingText] {
-				// Only expand the first occurance of a matching string
+				// Only expand the first occurrence of a matching string
 				continue
 			}
 			matches[matchingText] = true

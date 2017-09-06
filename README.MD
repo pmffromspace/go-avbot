@@ -1,3 +1,5 @@
+https://travis-ci.org/AVENTER-UG/go-avbot.svg?branch=master
+
 # What is go-avbot
 
 AVBOT is our digital working partner. He is helping us with our daily business. From creating and sending out invoices to install server applications. AVBOT is based on [go-neb](https://github.com/matrix-org/go-neb), a matrix BOT developed in golang. 

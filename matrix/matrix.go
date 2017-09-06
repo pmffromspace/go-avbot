@@ -5,7 +5,7 @@ import (
 
 	"../api"
 	"../database"
-	"github.com/matrix-org/gomatrix"
+	"github.com/AVENTER-UG/gomatrix"
 	log "github.com/sirupsen/logrus"
 )
 

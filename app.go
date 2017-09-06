@@ -29,12 +29,23 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-var BIND_ADDRESS string
-var DATABASE_TYPE string
-var DATABASE_URL string
-var BASE_URL string
-var CONFIG_FILE string
-var LOG_DIR string
+// BindAddress is the Bind Address of the bot
+var BindAddress string
+
+// DatabaseType is by default sqlite3
+var DatabaseType string
+
+// DatabaseURL is the url of the database :-)
+var DatabaseURL string
+
+// BaseURL is the url format of the database query
+var BaseURL string
+
+// ConfigFile is the bots config file in yaml format
+var ConfigFile string
+
+// LogDir is the directory where the bot will log in
+var LogDir string
 
 // loadFromConfig loads a config file and returns a ConfigFile
 func loadFromConfig(db *database.ServiceDB, configFilePath string) (*api.ConfigFile, error) {
@@ -217,12 +228,12 @@ type envVars struct {
 
 func main() {
 	e := envVars{
-		BindAddress:  BIND_ADDRESS,
-		DatabaseType: DATABASE_TYPE,
-		DatabaseURL:  DATABASE_URL,
-		BaseURL:      BASE_URL,
-		LogDir:       LOG_DIR,
-		ConfigFile:   CONFIG_FILE,
+		BindAddress:  BindAddress,
+		DatabaseType: DatabaseType,
+		DatabaseURL:  DatabaseURL,
+		BaseURL:      BaseURL,
+		LogDir:       LogDir,
+		ConfigFile:   ConfigFile,
 	}
 
 	if e.LogDir != "" {
