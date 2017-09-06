@@ -40,7 +40,7 @@ go get github.com/matrix-org/util
 go get github.com/mattn/go-sqlite3
 go get github.com/prometheus/client_golang/prometheus
 go get github.com/matrix-org/dugong
-go get github.com/matrix-org/gomatrix
+go get github.com/AVENTER-UG/gomatrix 
 go get github.com/mattn/go-shellwords
 go get gopkg.in/yaml.v2
 go get golang.org/x/oauth2
