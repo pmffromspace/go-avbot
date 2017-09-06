@@ -8,7 +8,7 @@ import (
 	"../clients"
 	"../database"
 	"../types"
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 // Remember when we first started polling on this service ID. Polling routines will

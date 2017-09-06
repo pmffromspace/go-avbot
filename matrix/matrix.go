@@ -5,8 +5,8 @@ import (
 
 	"../api"
 	"../database"
-	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/gomatrix"
+	log "github.com/sirupsen/logrus"
 )
 
 // NEBStore implements the gomatrix.Storer interface.

@@ -13,9 +13,9 @@ import (
 	"../matrix"
 	"../metrics"
 	"../types"
-	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/gomatrix"
 	shellwords "github.com/mattn/go-shellwords"
+	log "github.com/sirupsen/logrus"
 )
 
 // A Clients is a collection of clients used for bot services.

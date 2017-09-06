@@ -1,2 +1,3 @@
 config.yaml filter=git-crypt diff=git-crypt
+data/config.yaml filter=git-crypt diff=git-crypt
 *.key filter=git-crypt diff=git-crypt
