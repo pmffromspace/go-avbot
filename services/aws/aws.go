@@ -10,8 +10,8 @@ import (
 	"../../types"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/AVENTER-UG/gomatrix"
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/matrix-org/gomatrix"
 )
 
 // ServiceType of the AWS service

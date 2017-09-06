@@ -6,9 +6,9 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/AVENTER-UG/gomatrix"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/types"
-	"github.com/matrix-org/gomatrix"
 )
 
 var commandParseTests = []struct {

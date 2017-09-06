@@ -14,7 +14,7 @@ import (
 	"../../metrics"
 	"../../polling"
 	"../../types"
-	"github.com/matrix-org/gomatrix"
+	"github.com/AVENTER-UG/gomatrix"
 	"github.com/matrix-org/util"
 	log "github.com/sirupsen/logrus"
 )

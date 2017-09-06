@@ -11,8 +11,8 @@ import (
 	"../../services/github/client"
 	"../../services/github/webhook"
 	"../../types"
+	"github.com/AVENTER-UG/gomatrix"
 	gogithub "github.com/google/go-github/github"
-	"github.com/matrix-org/gomatrix"
 	log "github.com/sirupsen/logrus"
 )
 
