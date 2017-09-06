@@ -158,13 +158,13 @@ func (s *Service) expandIssue(roomID, userID, owner, repo string, issueNum int) 
 // is no link, it will return a Starter Link instead.
 func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 	return []types.Command{
-		types.Command{
+		{
 			Path: []string{"github", "create"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return s.cmdGithubCreate(roomID, userID, args)
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"github", "help"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return &gomatrix.TextMessage{
@@ -184,7 +184,7 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 // using the default repository.
 func (s *Service) Expansions(cli *gomatrix.Client) []types.Expansion {
 	return []types.Expansion{
-		types.Expansion{
+		{
 			Regexp: ownerRepoIssueRegex,
 			Expand: func(roomID, userID string, matchingGroups []string) interface{} {
 				// There's an optional group in the regex so matchingGroups can look like:

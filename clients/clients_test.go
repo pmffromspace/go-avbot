@@ -52,7 +52,7 @@ func (t MockTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 func TestCommandParsing(t *testing.T) {
 	var executedCmdArgs []string
 	cmds := []types.Command{
-		types.Command{
+		{
 			Path: []string{"test"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				executedCmdArgs = args

@@ -39,7 +39,7 @@ type Service struct {
 //    !aws help
 func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 	return []types.Command{
-		types.Command{
+		{
 			Path: []string{"aws", "help"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				var message string
@@ -55,49 +55,49 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 				return &gomatrix.HTMLMessage{message, "m.text", "org.matrix.custom.html", markdownRender(message)}, nil
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"aws", "instance", "start"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return s.cmdAwsInstanceStart(roomID, userID, args)
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"aws", "instance", "stop"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return s.cmdAwsInstanceStop(roomID, userID, args)
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"aws", "instance", "show"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return s.cmdAwsInstanceShow(roomID, userID, args)
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"aws", "instance", "run"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return s.cmdAwsInstanceRun(roomID, userID, args)
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"aws", "image", "search", "amazon"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return s.cmdAwsImageSearch(roomID, userID, "amazon", args)
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"aws", "image", "search", "marketplace"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return s.cmdAwsImageSearch(roomID, userID, "aws-marketplace", args)
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"aws", "image", "search", "microsoft"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return s.cmdAwsImageSearch(roomID, userID, "microsoft", args)
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"aws", "image", "search", "all"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return s.cmdAwsImageSearch(roomID, userID, "*", args)

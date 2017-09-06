@@ -28,7 +28,7 @@ type Service struct {
 //    !invoice help
 func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 	return []types.Command{
-		types.Command{
+		{
 			Path: []string{"invoice", "help"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				var message string
@@ -42,7 +42,7 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 				return &gomatrix.HTMLMessage{message, "m.text", "org.matrix.custom.html", markdownRender(message)}, nil
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"invoice", "get"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				if strings.Contains(s.AllowedUsers, userID) {
@@ -52,7 +52,7 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 				}
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"invoice", "acl"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				if strings.Contains(s.AllowedUsers, userID) {
@@ -62,7 +62,7 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 				}
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"invoice", "create"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				if len(args) < 5 {

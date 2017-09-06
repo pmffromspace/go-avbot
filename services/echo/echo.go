@@ -21,7 +21,7 @@ type Service struct {
 // Responds with a notice of "some message".
 func (e *Service) Commands(cli *gomatrix.Client) []types.Command {
 	return []types.Command{
-		types.Command{
+		{
 			Path: []string{"echo"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return &gomatrix.TextMessage{"m.notice", strings.Join(args, " ")}, nil
