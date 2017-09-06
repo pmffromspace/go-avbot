@@ -279,7 +279,7 @@ func nameForAuthor(a *github.CommitAuthor) string {
 	if a == nil {
 		return ""
 	}
-	if a.Login != nil { // prefer to use their GH username than the name they commited as
+	if a.Login != nil { // prefer to use their GH username than the name they committed as
 		return *a.Login
 	}
 	return *a.Name

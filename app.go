@@ -29,12 +29,12 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-var BIND_ADDRESS string
-var DATABASE_TYPE string
-var DATABASE_URL string
-var BASE_URL string
-var CONFIG_FILE string
-var LOG_DIR string
+var BindAddress string
+var DatabaseType string
+var DatabaseUrl string
+var BaseUrl string
+var ConfigFile string
+var LogDir string
 
 // loadFromConfig loads a config file and returns a ConfigFile
 func loadFromConfig(db *database.ServiceDB, configFilePath string) (*api.ConfigFile, error) {
@@ -217,12 +217,12 @@ type envVars struct {
 
 func main() {
 	e := envVars{
-		BindAddress:  BIND_ADDRESS,
-		DatabaseType: DATABASE_TYPE,
-		DatabaseURL:  DATABASE_URL,
-		BaseURL:      BASE_URL,
-		LogDir:       LOG_DIR,
-		ConfigFile:   CONFIG_FILE,
+		BindAddress:  BindAddress,
+		DatabaseType: DatabaseType,
+		DatabaseURL:  DatabaseUrl,
+		BaseURL:      BaseUrl,
+		LogDir:       LogDir,
+		ConfigFile:   ConfigFile,
 	}
 
 	if e.LogDir != "" {
