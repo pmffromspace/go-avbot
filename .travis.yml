@@ -23,6 +23,5 @@ install:
 script: ./hooks/pre-commit
 
 after_success:
-  - curl -H "Content-Type: application/json" --data '{"source_type": "Branch", "source_name": "v0.0.3"}' -X POST https://registry.hub.docker.com/u/avhost/docker-go-avbot/trigger/b7b4850f-96c7-435e-b077-f4de515d1e26/
-  - curl -H "Content-Type: application/json" --data '{"source_type": "Branch", "source_name": "master"}' -X POST https://registry.hub.docker.com/u/avhost/docker-go-avbot/trigger/b7b4850f-96c7-435e-b077-f4de515d1e26/  
+  - ./hooks/push
 
