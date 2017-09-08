@@ -1,25 +1,28 @@
+# go-avbot - the aventer bot
+
 [![Build Status](https://travis-ci.org/AVENTER-UG/go-avbot.svg?branch=master)](https://travis-ci.org/AVENTER-UG/go-avbot)
 
-# What is go-avbot
+## What is go-avbot
 
-AVBOT is our digital working partner. He is helping us with our daily business. From creating and sending out invoices to install server applications. AVBOT is based on [go-neb](https://github.com/matrix-org/go-neb), a matrix BOT developed in golang. 
-
+AVBOT is our digital working partner. He is helping us with our daily business. From creating and sending out invoices to install server applications. AVBOT is based on [go-neb](https://github.com/matrix-org/go-neb), a matrix BOT developed in golang.
 
 Our Kanban Board is [here](https://wekan.aventer.biz/b/XePZjKD4mK3eFY8MS/go-avbot)
 
-# License
+## License
+
 go-neb is under the Apache License. To make it more complicated, our code are under GPL. These are:
+
 - aws (services/aws)
 - invoice (services/invoice)
 - pentest (services/pentest)
 
-# Features
+## Features
 
 ### AWS
 
 - Start/Stop of AWS instances
 - Show list of all instances in all regions
-- Create Instances 
+- Create Instances
 - Search AMI's
 
 ### Ispconfig
@@ -34,10 +37,10 @@ go-neb is under the Apache License. To make it more complicated, our code are un
 
 There are still a lot of work. Currently our main focus is the AWS support.
 
-# Software Requirements
+## Software Requirements
 
-```
-go get github.com/sirupsen/logrus 
+```bash
+go get github.com/sirupsen/logrus
 go get github.com/matrix-org/util
 go get github.com/mattn/go-sqlite3
 go get github.com/prometheus/client_golang/prometheus
@@ -52,26 +55,28 @@ go get github.com/russross/blackfriday
 go get github.com/aws/aws-sdk-go
 ```
 
-# API Documentation
+## API Documentation
 
-- Matrix API: https://www.matrix.org/docs/spec/r0.0.0/client_server.html
-- AWS API: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/setting-up.html
-- OpenVAS: http://docs.greenbone.net/API/OMP/omp-7.0.html
+- [Matrix API](https://www.matrix.org/docs/spec/r0.0.0/client_server.html)
+- [AWS API](https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/setting-up.html)
+- [OpenVAS](http://docs.greenbone.net/API/OMP/omp-7.0.html)
 
-# Changelog
+## Changelog
 
-v0.0.1
+### v0.0.1
+
 - aws: add show instances of all configured regions
 - aws: add start and stop of instances
 - aws: add search of images
 - invoice: add create of invoices
 - invoice: add view invoices of a user
 
-v0.0.2
+### v0.0.2
+
 - pentest: give out a list of all scanner configs
 - pentest: start a pentest
 - pentest: get a status of the pentest
 - pentest: download the report file
 - aws: add run instances
 
-v0.0.3
+### v0.0.3
