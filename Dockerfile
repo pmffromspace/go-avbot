@@ -18,12 +18,12 @@ RUN apk add --update git go gcc g++  && \
     go get gopkg.in/alecthomas/kingpin.v2 && \  
     go get github.com/russross/blackfriday && \  
     go get github.com/aws/aws-sdk-go && \ 
+    git clone https://github.com/AVENTER-UG/go-avbot.git /go-avbot/ && \
     mkdir -p /go-avbot/log
 
 VOLUME /go-avbot/data
 
 ADD run.sh /run.sh
-ADD * /go-avbot/
 
 EXPOSE 4050
 

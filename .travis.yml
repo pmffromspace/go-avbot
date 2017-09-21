@@ -21,11 +21,11 @@ install:
  - go get github.com/gordonklaus/ineffassign
 
 before_install:
-  - docker build -t avhost/go-avbot .
+  - docker build -t avhost/go-avbot:$TRAVIS_BRANCH .
 
 script: ./hooks/pre-commit
 
 after_success:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-  - docker push avhost/go-avbot;
+  - docker push avhost/go-avbot:$TRAVIS_BRANCH;
 
