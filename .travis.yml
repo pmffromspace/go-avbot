@@ -30,6 +30,8 @@ before_install:
 script: ./hooks/pre-commit
 
 after_success:
-  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-  - docker push avhost/go-avbot:$TRAVIS_BRANCH;
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker push avhost/go-avbot:$TRAVIS_BRANCH
 
+notifications:
+  webhooks: https://avbot.marathon.dc.aventer.biz/notifications
