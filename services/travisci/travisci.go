@@ -244,6 +244,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 // Register makes sure the Config information supplied is valid.
 func (s *Service) Register(oldService types.Service, client *gomatrix.Client) error {
 	s.WebhookURL = s.webhookEndpointURL
+	log.Info("Travis WebhookURL: ", s.WebhookURL)
 	for _, roomData := range s.Rooms {
 		for repo := range roomData.Repos {
 			match := ownerRepoRegex.FindStringSubmatch(repo)
