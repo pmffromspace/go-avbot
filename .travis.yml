@@ -34,4 +34,4 @@ after_success:
   - docker push avhost/go-avbot:$TRAVIS_BRANCH
 
 notifications:
-  webhooks: https://avbot.marathon.dc.aventer.biz/notifications
+  webhooks: https://avbot.marathon.dc.aventer.biz/services/hooks/dHJhdmlzX3dlYmhvb2tfc2VydmljZQ
