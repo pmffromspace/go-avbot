@@ -1,6 +1,10 @@
 language: go
 go:
  - 1.8
+
+services:
+  - docker
+
 install:
  - go get github.com/sirupsen/logrus 
  - go get github.com/matrix-org/util
@@ -19,4 +23,15 @@ install:
  - go get github.com/fzipp/gocyclo
  - go get github.com/client9/misspell/...
  - go get github.com/gordonklaus/ineffassign
+
+before_install:
+  - docker build -t avhost/go-avbot:$TRAVIS_BRANCH .
+
 script: ./hooks/pre-commit
+
+after_success:
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker push avhost/go-avbot:$TRAVIS_BRANCH
+
+notifications:
+  webhooks: https://avbot.marathon.dc.aventer.biz/notifications
