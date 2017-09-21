@@ -19,6 +19,7 @@ import (
 	_ "./services/github"
 	_ "./services/invoice"
 	_ "./services/pentest"
+	_ "./services/travisci"
 	"./types"
 	"github.com/matrix-org/dugong"
 	"github.com/matrix-org/util"

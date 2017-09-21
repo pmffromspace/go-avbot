@@ -20,6 +20,7 @@ RUN apk add --update git go gcc g++  && \
     go get github.com/russross/blackfriday && \  
     go get github.com/aws/aws-sdk-go && \ 
     git clone https://github.com/AVENTER-UG/go-avbot.git /go-avbot/ && \
+    cd /go-avbot/ && \
     git checkout -b $BRANCH && \
     mkdir -p /go-avbot/log
 
