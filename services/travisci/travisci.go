@@ -244,11 +244,12 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 // Register makes sure the Config information supplied is valid.
 func (s *Service) Register(oldService types.Service, client *gomatrix.Client) error {
 	s.WebhookURL = s.webhookEndpointURL
+	log.Info("Travis WebhookURL: ", s.WebhookURL)
 	for _, roomData := range s.Rooms {
 		for repo := range roomData.Repos {
 			match := ownerRepoRegex.FindStringSubmatch(repo)
 			if len(match) == 0 {
-				return fmt.Errorf("Repository '%s' is not a valid repository name.", repo)
+				return fmt.Errorf("This Repository is not a valid repository name: %s ", repo)
 			}
 		}
 	}
@@ -259,7 +260,7 @@ func (s *Service) Register(oldService types.Service, client *gomatrix.Client) er
 // PostRegister deletes this service if there are no registered repos.
 func (s *Service) PostRegister(oldService types.Service) {
 	for _, roomData := range s.Rooms {
-		for _ = range roomData.Repos {
+		for range roomData.Repos {
 			return // at least 1 repo exists
 		}
 	}
