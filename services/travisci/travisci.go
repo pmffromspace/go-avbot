@@ -259,7 +259,7 @@ func (s *Service) Register(oldService types.Service, client *gomatrix.Client) er
 // PostRegister deletes this service if there are no registered repos.
 func (s *Service) PostRegister(oldService types.Service) {
 	for _, roomData := range s.Rooms {
-		for _ = range roomData.Repos {
+		for range roomData.Repos {
 			return // at least 1 repo exists
 		}
 	}
