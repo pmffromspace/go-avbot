@@ -3,6 +3,7 @@ MAINTAINER Andreas Peters <support@aventer.biz>
 
 ENV BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=/go-avbot/data/go-neb.db?_busy_timeout=5000 
 
+ARG BRANCH=v0.0.3
 
 RUN apk add --update git go gcc g++  && \     
     go get github.com/sirupsen/logrus && \  
@@ -19,6 +20,7 @@ RUN apk add --update git go gcc g++  && \
     go get github.com/russross/blackfriday && \  
     go get github.com/aws/aws-sdk-go && \ 
     git clone https://github.com/AVENTER-UG/go-avbot.git /go-avbot/ && \
+    git checkout -b $BRANCH && \
     mkdir -p /go-avbot/log
 
 VOLUME /go-avbot/data
