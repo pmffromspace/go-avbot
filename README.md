@@ -37,6 +37,15 @@ go-neb is under the Apache License. To make it more complicated, our code are un
 
 There are still a lot of work. Currently our main focus is the AWS support.
 
+### Github
+
+- Receive Webhooks from your github repositories.
+- Create Issues
+
+### Travis-CI
+
+- Receive Webhooks from your travis account
+
 ## Software Requirements
 
 ```bash
@@ -80,3 +89,5 @@ go get github.com/aws/aws-sdk-go
 - aws: add run instances
 
 ### v0.0.3
+
+- add travis webhook support (fork from the original project)
