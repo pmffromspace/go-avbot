@@ -32,7 +32,7 @@ script: ./hooks/pre-commit
 after_success:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - docker push avhost/go-avbot:$TRAVIS_BRANCH
-  - curl --user '$MARATHON_WEBHOOK_USERNAME:$MARATHON_WEBHOOK_PASSWORD' -k -XPOST -H "Content-Type: application/json" https://$MARATHON_WEBHOOB_URL/v2/apps$MARATHON_WEBHOOK_ID/restart
+  - "curl --user $MARATHON_WEBHOOK_USERNAME:$MARATHON_WEBHOOK_PASSWORD -k -XPOST -H 'Content-Type: application/json' https://$MARATHON_WEBHOOB_URL/v2/apps$MARATHON_WEBHOOK_ID/restart"
 
 notifications:
   webhooks: $AVBOT_WEBHOOK
