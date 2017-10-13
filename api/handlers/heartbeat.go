@@ -11,7 +11,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/matrix-org/util"
+	"github.com/AVENTER-UG/util"
 )
 
 // Heartbeat implements the heartbeat API
