@@ -12,8 +12,8 @@ import (
 	"strings"
 
 	"github.com/AVENTER-UG/gomatrix"
+	"github.com/AVENTER-UG/util"
 	"github.com/google/go-github/github"
-	"github.com/matrix-org/util"
 	log "github.com/sirupsen/logrus"
 )
 

@@ -7,7 +7,7 @@ services:
 
 install:
  - go get github.com/sirupsen/logrus 
- - go get github.com/matrix-org/util
+ - go get github.com/AVENTER-UG/util
  - go get github.com/mattn/go-sqlite3
  - go get github.com/prometheus/client_golang/prometheus
  - go get github.com/matrix-org/dugong
@@ -25,11 +25,12 @@ install:
  - go get github.com/gordonklaus/ineffassign
 
 before_install:
-  - docker build -t avhost/go-avbot:$TRAVIS_BRANCH .
+  - go build init.go app.go
 
 script: ./hooks/pre-commit
 
 after_success:
+  - docker build -t avhost/go-avbot:$TRAVIS_BRANCH .
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - docker push avhost/go-avbot:$TRAVIS_BRANCH
   - "curl --user $MARATHON_WEBHOOK_USERNAME:$MARATHON_WEBHOOK_PASSWORD -k -XPOST -H 'Content-Type: application/json' https://$MARATHON_WEBHOOK_URL/v2/apps$MARATHON_WEBHOOK_ID/restart"
