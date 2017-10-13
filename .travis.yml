@@ -5,7 +5,7 @@ go:
 services:
   - docker
 
-install:
+before_install:
  - go get github.com/sirupsen/logrus 
  - go get github.com/AVENTER-UG/util
  - go get github.com/mattn/go-sqlite3
@@ -24,7 +24,7 @@ install:
  - go get github.com/client9/misspell/...
  - go get github.com/gordonklaus/ineffassign
 
-before_install:
+install:
   - go build init.go app.go
 
 script: ./hooks/pre-commit
