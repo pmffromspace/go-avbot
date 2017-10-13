@@ -32,5 +32,5 @@ COPY run.sh /run.sh
 
 EXPOSE 4050
 
-#ENTRYPOINT ["/run.sh"]
-CMD ["/bin/sh"]
+ENTRYPOINT ["/run.sh"]
+#CMD ["/bin/sh"]
