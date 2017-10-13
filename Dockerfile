@@ -7,7 +7,7 @@ ARG BRANCH=v0.0.3
 
 RUN apk add --update git go gcc g++  && \
     go get github.com/sirupsen/logrus && \
-    go get github.com/matrix-org/util && \
+    go get github.com/AVENTER-UG/util && \
     go get github.com/mattn/go-sqlite3 && \
     go get github.com/prometheus/client_golang/prometheus && \
     go get github.com/matrix-org/dugong && \
