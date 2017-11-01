@@ -1,4 +1,4 @@
-// Package travisci implements a Service capable of processing webhooks from Travis-CI.
+// Package wekan implements a Service capable of processing webhooks from Wekan
 package wekan
 
 import (
@@ -13,7 +13,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// ServiceType of the Travis-CI service.
+// ServiceType of the Wekan service.
 const ServiceType = "wekan"
 
 // DefaultTemplate contains the template that will be used if none is supplied.
@@ -24,10 +24,10 @@ const DefaultTemplate = (`%{boardsitory}#%{build_number} (%{branch} - %{commit} 
 
 var httpClient = &http.Client{}
 
-// Service contains the Config fields for the Travis-CI service.
+// Service contains the Config fields for the Wekan service.
 //
-// This service will send notifications into a Matrix room when Travis-CI sends
-// webhook events to it. It requires a public domain which Travis-CI can reach.
+// This service will send notifications into a Matrix room when Wekan sends
+// webhook events to it. It requires a public domain which Wekan can reach.
 // Notices will be sent as the service user ID.
 //
 // Example JSON request:
@@ -35,8 +35,7 @@ var httpClient = &http.Client{}
 //       rooms: {
 //           "!ewfug483gsfe:localhost": {
 //               boards: {
-//                   "matrix-org/go-neb": {
-//                       template: "%{boardsitory}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}\nBuild details : %{build_url}"
+//                   "1" {
 //                   }
 //               }
 //           }
@@ -50,11 +49,13 @@ type Service struct {
 	// A map from Matrix room ID to Github-style owner/board boardsitories.
 	Rooms map[string]struct {
 		// A map of "boardID's" to configuration information
-		Boards map[string]struct{} `json:"boards"`
+		Boards map[string]struct {
+			Template string `json:"template"`
+		} `json:"boards"`
 	} `json:"rooms"`
 }
 
-// The payload from Travis-CI
+// The payload from Wekan
 type webhookNotification struct {
 	ID          string `json:"cardId"`
 	Text        string `json:"text"`

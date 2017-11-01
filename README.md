@@ -91,3 +91,4 @@ go get github.com/aws/aws-sdk-go
 ### v0.0.3
 
 - add travis webhook support (fork from the original project)
+- add wekan webhook support (is a fork of the travis version)

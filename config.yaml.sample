@@ -127,10 +127,16 @@ services:
     Config:
       Rooms:
         "!someroom:id":
-          Boards
-            "1"
-            "2"
+          Boards:
+            "1":
+              template: ""
+            "2":
+              template: ""
         "!someroom:id":
-          Boards
-            "3"
-            "5"            
+          Boards:
+            "3":
+              template: ""
+            "5":
+              template: ""
+            
+            

@@ -20,6 +20,7 @@ import (
 	_ "./services/invoice"
 	_ "./services/pentest"
 	_ "./services/travisci"
+	_ "./services/wekan"
 	"./types"
 	"github.com/AVENTER-UG/util"
 	"github.com/matrix-org/dugong"
