@@ -49,31 +49,8 @@ type Service struct {
 	WebhookURL string `json:"webhook_url"`
 	// A map from Matrix room ID to Github-style owner/board boardsitories.
 	Rooms map[string]struct {
-		// A map of "owner/board" to configuration information
-		Boards map[string]struct {
-			// The template string to use when creating notifications.
-			//
-			// This is identical to the format of Slack Notifications for Travis-CI:
-			// https://docs.travis-ci.com/user/notifications#Customizing-slack-notifications
-			//
-			// The following variables are available:
-			//   boardsitory_slug: your GitHub board identifier (like svenfuchs/minimal)
-			//   boardsitory_name: the slug without the username
-			//   build_number: build number
-			//   build_id: build id
-			//   branch: branch build name
-			//   commit: shortened commit SHA
-			//   author: commit author name
-			//   commit_message: commit message of build
-			//   commit_subject: first line of the commit message
-			//   result: result of build
-			//   message: Travis CI message to the build
-			//   duration: total duration of all builds in the matrix
-			//   elapsed_time: time between build start and finish
-			//   compare_url: commit change view URL
-			//   build_url: URL of the build detail
-			Template string `json:"template"`
-		} `json:"boards"`
+		// A map of "boardID's" to configuration information
+		Boards map[string]struct{} `json:"boards"`
 	} `json:"rooms"`
 }
 

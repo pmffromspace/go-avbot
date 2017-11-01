@@ -119,5 +119,18 @@ services:
             "matrix-org/synapse":
               Events: ["push", "issues"]
             "matrix-org/dendron":
-              Events: ["pull_request"]
+              Events: ["pull_request"]              
 
+ - ID: "travis_webhook_service"
+    Type: "wekan"
+    UserID: "@another_goavbot:localhost"
+    Config:
+      Rooms:
+        "!someroom:id":
+          Boards
+            "1"
+            "2"
+        "!someroom:id":
+          Boards
+            "3"
+            "5"            
