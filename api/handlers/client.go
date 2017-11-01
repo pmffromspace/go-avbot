@@ -6,7 +6,7 @@ import (
 
 	"../../api"
 	"../../clients"
-	"github.com/matrix-org/util"
+	"github.com/AVENTER-UG/util"
 )
 
 // ConfigureClient represents an HTTP handler capable of processing /admin/configureClient requests.
