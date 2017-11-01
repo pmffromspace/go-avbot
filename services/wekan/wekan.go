@@ -3,6 +3,7 @@ package wekan
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"strings"
 
@@ -95,16 +96,16 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 		w.WriteHeader(400)
 		return
 	}
-	payload := req.PostFormValue("payload")
-	if payload == "" {
-		log.Error("Wekan webhook is missing payload= form value")
+	payload, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		log.Error("Wekan webhook is missing payload= form value", err)
 		w.WriteHeader(400)
 		return
 	}
 
 	var notif webhookNotification
 	if err := json.Unmarshal([]byte(payload), &notif); err != nil {
-		log.WithError(err).Error("Wekan webhook received an invalid JSON payload=")
+		log.WithError(err).Error("Wekan webhook received an invalid JSON payload=", payload)
 		w.WriteHeader(400)
 		return
 	}
