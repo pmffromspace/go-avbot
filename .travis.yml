@@ -3,7 +3,7 @@ go:
  - 1.8
 
 services:
-  - docker
+  - docker  
 
 before_install:
  - go get github.com/sirupsen/logrus 
@@ -23,18 +23,21 @@ before_install:
  - go get github.com/fzipp/gocyclo
  - go get github.com/client9/misspell/...
  - go get github.com/gordonklaus/ineffassign
+ - go get github.com/optiopay/klar
 
 install:
   - go build init.go app.go
+  - docker run -d --name db arminc/clair-db:$(date -d "1 day ago" +%Y-%m-%d)
+  - docker run -d -p 6060-6061:6060-6061 --link db:postgres --name clair arminc/clair-local-scan:v2.0.1     
 
 script: ./hooks/pre-commit
 
-after_success:
+after_success:  
   - docker build -t avhost/go-avbot:$TRAVIS_BRANCH .
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - CLAIR_ADDR=http://localhost CLAIR_OUTPUT=High CLAIR_THRESHOLD=10 klar avhost/go-avbot:$TRAVIS_BRANCH 
   - docker push avhost/go-avbot:$TRAVIS_BRANCH
   - "curl --user $MARATHON_WEBHOOK_USERNAME:$MARATHON_WEBHOOK_PASSWORD -k -XPOST -H 'Content-Type: application/json' https://$MARATHON_WEBHOOK_URL/v2/apps$MARATHON_WEBHOOK_ID/restart"
 
 notifications:
-  webhooks: $AVBOT_WEBHOOK
-  
+  webhooks: $AVBOT_WEBHOOK  

@@ -2,6 +2,14 @@
 
 [![Build Status](https://travis-ci.org/AVENTER-UG/go-avbot.svg?branch=master)](https://travis-ci.org/AVENTER-UG/go-avbot)
 
+## Github Repo
+
+[https://github.com/AVENTER-UG](https://github.com/AVENTER-UG)
+
+## Security
+
+We verify our image automaticly by clair. If you want to see the current security status, please have a look in travis-ci.
+
 ## What is go-avbot
 
 AVBOT is our digital working partner. He is helping us with our daily business. From creating and sending out invoices to install server applications. AVBOT is based on [go-neb](https://github.com/matrix-org/go-neb), a matrix BOT developed in golang.
@@ -45,6 +53,10 @@ There are still a lot of work. Currently our main focus is the AWS support.
 ### Travis-CI
 
 - Receive Webhooks from your travis account
+
+### Wekan
+
+- Receive Webhooks from your wekan boards
 
 ## Software Requirements
 
@@ -92,3 +104,5 @@ go get github.com/aws/aws-sdk-go
 
 - add travis webhook support (fork from the original project)
 - add wekan webhook support (is a fork of the travis version)
+
+### v0.0.4

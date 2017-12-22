@@ -2,3 +2,4 @@ go-neb.db
 config.yaml
 log/*.log*
 data/config.yaml
+.vscode
