@@ -8,7 +8,7 @@
 
 ## Security
 
-We verify our image automaticly by clair. If you want to see the current security status, please have a look in travis-ci.
+We verify our image automatically by clair. If you want to see the current security status, please have a look in travis-ci.
 
 ## What is go-avbot
 
