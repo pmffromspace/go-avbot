@@ -223,9 +223,7 @@ func main() {
 
 	if LogDir != "" {
 		log.AddHook(dugong.NewFSHook(
-			filepath.Join(LogDir, "info.log"),
-			filepath.Join(LogDir, "warn.log"),
-			filepath.Join(LogDir, "error.log"),
+			filepath.Join(LogDir, "avbot.log"),
 			&log.TextFormatter{
 				TimestampFormat:  "2006-01-02 15:04:05.000000",
 				DisableColors:    true,

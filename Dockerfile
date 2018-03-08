@@ -3,7 +3,7 @@ LABEL maintainer="Andreas Peters <support@aventer.biz>"
 
 ENV BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=/go-avbot/data/go-neb.db?_busy_timeout=5000 
 
-ARG BRANCH=v0.0.3
+ARG BRANCH=v0.0.4
 
 RUN apk update && \
     apk add git gcc libc-dev && \
