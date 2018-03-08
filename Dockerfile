@@ -1,4 +1,4 @@
-FROM golang:1.9.2-alpine3.7
+FROM golang:1.10.0-alpine3.7
 LABEL maintainer="Andreas Peters <support@aventer.biz>"
 
 ENV BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=/go-avbot/data/go-neb.db?_busy_timeout=5000 
