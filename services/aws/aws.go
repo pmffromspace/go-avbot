@@ -10,7 +10,7 @@ import (
 	"../../types"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/AVENTER-UG/gomatrix"
+	"git.aventer.biz/AVENTER/gomatrix"
 	"github.com/aws/aws-sdk-go/aws"
 )
 

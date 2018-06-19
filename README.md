@@ -1,10 +1,8 @@
 # go-avbot - the aventer bot
 
-[![Build Status](https://travis-ci.org/AVENTER-UG/go-avbot.svg?branch=master)](https://travis-ci.org/AVENTER-UG/go-avbot)
-
 ## Github Repo
 
-[https://github.com/AVENTER-UG](https://github.com/AVENTER-UG)
+[https://git.aventer.biz/AVENTER](https://git.aventer.biz/AVENTER)
 
 ## Security
 
@@ -66,7 +64,7 @@ go get github.com/matrix-org/util
 go get github.com/mattn/go-sqlite3
 go get github.com/prometheus/client_golang/prometheus
 go get github.com/matrix-org/dugong
-go get github.com/AVENTER-UG/gomatrix
+go get git.aventer.biz/AVENTER/gomatrix
 go get github.com/mattn/go-shellwords
 go get gopkg.in/yaml.v2
 go get golang.org/x/oauth2
@@ -106,3 +104,6 @@ go get github.com/aws/aws-sdk-go
 - add wekan webhook support (is a fork of the travis version)
 
 ### v0.0.4
+
+- modify repo to git.aventer.biz
+- add gitea support

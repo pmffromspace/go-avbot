@@ -8,11 +8,11 @@ ARG BRANCH=v0.0.4
 RUN apk update && \
     apk add git gcc libc-dev && \
     go get github.com/sirupsen/logrus && \
-    go get github.com/AVENTER-UG/util && \
+    go get git.aventer.biz/AVENTER/util && \
     go get github.com/mattn/go-sqlite3 && \
     go get github.com/prometheus/client_golang/prometheus && \
     go get github.com/matrix-org/dugong && \
-    go get github.com/AVENTER-UG/gomatrix && \
+    go get git.aventer.biz/AVENTER/gomatrix && \
     go get github.com/mattn/go-shellwords && \
     go get gopkg.in/yaml.v2 && \
     go get golang.org/x/oauth2 && \

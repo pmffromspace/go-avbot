@@ -22,7 +22,7 @@ import (
 	_ "./services/travisci"
 	_ "./services/wekan"
 	"./types"
-	"github.com/AVENTER-UG/util"
+	"git.aventer.biz/AVENTER/util"
 	"github.com/matrix-org/dugong"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/prometheus/client_golang/prometheus"

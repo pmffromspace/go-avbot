@@ -6,7 +6,7 @@ import (
 
 	"../../api"
 	"../../clients"
-	"github.com/AVENTER-UG/util"
+	"git.aventer.biz/AVENTER/util"
 )
 
 // ConfigureClient represents an HTTP handler capable of processing /admin/configureClient requests.

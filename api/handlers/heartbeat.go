@@ -11,7 +11,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/AVENTER-UG/util"
+	"git.aventer.biz/AVENTER/util"
 )
 
 // Heartbeat implements the heartbeat API

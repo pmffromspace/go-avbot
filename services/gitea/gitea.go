@@ -1,5 +1,5 @@
-// Package wekan implements a Service capable of processing webhooks from Wekan
-package wekan
+// Package gitea implements a Service capable of processing webhooks from Gitea
+package gitea
 
 import (
 	"encoding/json"
@@ -14,21 +14,20 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// ServiceType of the Wekan service.
-const ServiceType = "wekan"
+// ServiceType of the Gitea service.
+const ServiceType = "gitea"
 
 // DefaultTemplate contains the template that will be used if none is supplied.
-// This matches the default mentioned at: https://docs.travis-ci.com/user/notifications#Customizing-slack-notifications
 const DefaultTemplate = (`%{boardsitory}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}
 	Change view : %{compare_url}
 	Build details : %{build_url}`)
 
 var httpClient = &http.Client{}
 
-// Service contains the Config fields for the Wekan service.
+// Service contains the Config fields for the Gitea service.
 //
-// This service will send notifications into a Matrix room when Wekan sends
-// webhook events to it. It requires a public domain which Wekan can reach.
+// This service will send notifications into a Matrix room when Gitea sends
+// webhook events to it. It requires a public domain which Gitea can reach.
 // Notices will be sent as the service user ID.
 //
 // Example JSON request:
@@ -45,7 +44,7 @@ var httpClient = &http.Client{}
 type Service struct {
 	types.DefaultService
 	webhookEndpointURL string
-	// The URL which should be added to .travis.yml - Populated by Go-NEB after Service registration.
+	// The URL which should be added to .gitea.yml - Populated by Go-NEB after Service registration.
 	WebhookURL string `json:"webhook_url"`
 	// A map from Matrix room ID to Github-style owner/board boardsitories.
 	Rooms map[string]struct {
@@ -56,7 +55,7 @@ type Service struct {
 	} `json:"rooms"`
 }
 
-// The payload from Wekan
+// The payload from Gitea
 type webhookNotification struct {
 	ID          string `json:"cardId"`
 	Text        string `json:"text"`
@@ -68,44 +67,43 @@ type webhookNotification struct {
 	Description string `json:"description"`
 }
 
-func outputForTemplate(travisTmpl string, tmpl map[string]string) (out string) {
-	if travisTmpl == "" {
-		travisTmpl = DefaultTemplate
+func outputForTemplate(giteaTmpl string, tmpl map[string]string) (out string) {
+	if giteaTmpl == "" {
+		giteaTmpl = DefaultTemplate
 	}
-	out = travisTmpl
+	out = giteaTmpl
 	for tmplVar, tmplValue := range tmpl {
 		out = strings.Replace(out, "%{"+tmplVar+"}", tmplValue, -1)
 	}
 	return out
 }
 
-// OnReceiveWebhook receives requests from wekan and possibly sends requests to Matrix as a result.
+// OnReceiveWebhook receives requests from gitea and possibly sends requests to Matrix as a result.
 //
-// If the boardsitory matches a known wekan board, a notification will be formed from the
+// If the boardsitory matches a known gitea board, a notification will be formed from the
 // template for that boardsitory and a notice will be sent to Matrix.
 //
-// Go-AVBOT cannot register with wekan for webhooks automatically. The user must manually add the
-// webhook endpoint URL to their .travis.yml file:
+// Go-AVBOT cannot register with gitea for webhooks automatically. The user must manually add the
+// webhook endpoint URL to their .gitea.yml file:
 //    notifications:
-//        webhooks: http://go-avbot-endpoint.com/wekan_webhook_service
+//        webhooks: http://go-avbot-endpoint.com/gitea_webhook_service
 //
-// More infos, see https://github.com/wekan/wekan/wiki/Webhook-data
 func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *gomatrix.Client) {
 	if err := req.ParseForm(); err != nil {
-		log.WithError(err).Error("Failed to read incoming Wekan webhook form")
+		log.WithError(err).Error("Failed to read incoming Gitea webhook form")
 		w.WriteHeader(400)
 		return
 	}
 	payload, err := ioutil.ReadAll(req.Body)
 	if err != nil {
-		log.Error("Wekan webhook is missing payload= form value", err)
+		log.Error("Gitea webhook is missing payload= form value", err)
 		w.WriteHeader(400)
 		return
 	}
 
 	var notif webhookNotification
 	if err := json.Unmarshal([]byte(payload), &notif); err != nil {
-		log.WithError(err).Error("Wekan webhook received an invalid JSON payload=", payload)
+		log.WithError(err).Error("Gitea webhook received an invalid JSON payload=", payload)
 		w.WriteHeader(400)
 		return
 	}
@@ -129,10 +127,10 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 			logger.WithFields(log.Fields{
 				"message": msg,
 				"room_id": roomID,
-			}).Print("Sending Wekan notification to room")
+			}).Print("Sending Gitea notification to room")
 			if _, e := cli.SendMessageEvent(roomID, "m.room.message", msg); e != nil {
 				logger.WithError(e).WithField("room_id", roomID).Print(
-					"Failed to send Wekan notification to room.")
+					"Failed to send Gitea notification to room.")
 			}
 		}
 	}
@@ -142,7 +140,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 // Register makes sure the Config information supplied is valid.
 func (s *Service) Register(oldService types.Service, client *gomatrix.Client) error {
 	s.WebhookURL = s.webhookEndpointURL
-	log.Info("Wekan WebhookURL: ", s.WebhookURL)
+	log.Info("Gitea WebhookURL: ", s.WebhookURL)
 	s.joinRooms(client)
 	return nil
 }

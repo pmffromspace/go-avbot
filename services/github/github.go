@@ -17,7 +17,7 @@ import (
 	"../../realms/github"
 	"../../services/github/client"
 	"../../types"
-	"github.com/AVENTER-UG/gomatrix"
+	"git.aventer.biz/AVENTER/gomatrix"
 	gogithub "github.com/google/go-github/github"
 	log "github.com/sirupsen/logrus"
 )
