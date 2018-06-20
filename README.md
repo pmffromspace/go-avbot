@@ -56,6 +56,10 @@ There are still a lot of work. Currently our main focus is the AWS support.
 
 - Receive Webhooks from your wekan boards
 
+### Gitea
+
+- Receive Webhooks from your gitea repo
+
 ## Software Requirements
 
 ```bash
