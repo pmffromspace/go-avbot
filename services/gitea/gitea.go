@@ -50,7 +50,7 @@ type Service struct {
 	WebhookURL string `json:"webhook_url"`
 	// A map from Matrix room ID to Github-style owner/board boardsitories.
 	Rooms map[string]struct {
-		// A map of "boardID's" to configuration information
+		// A map of "repos" to configuration information
 		Repos map[string]struct {
 			Template string `json:"template"`
 		} `json:"repos"`
