@@ -16,6 +16,7 @@ import (
 	_ "./realms/github"
 	_ "./services/aws"
 	_ "./services/echo"
+	_ "./services/gitea"
 	_ "./services/github"
 	_ "./services/invoice"
 	_ "./services/pentest"

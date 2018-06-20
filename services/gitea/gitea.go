@@ -49,22 +49,78 @@ type Service struct {
 	// A map from Matrix room ID to Github-style owner/board boardsitories.
 	Rooms map[string]struct {
 		// A map of "boardID's" to configuration information
-		Boards map[string]struct {
+		Repos map[string]struct {
 			Template string `json:"template"`
-		} `json:"boards"`
+		} `json:"repos"`
 	} `json:"rooms"`
 }
 
 // The payload from Gitea
 type webhookNotification struct {
-	ID          string `json:"cardId"`
-	Text        string `json:"text"`
-	ListID      string `json:"listId"`
-	OldListID   string `json:"oldListId"`
-	BoardID     string `json:"boardId"`
-	User        string `json:"user"`
-	Card        string `json:"card"`
-	Description string `json:"description"`
+	Secret     string `json:"secret"`
+	Ref        string `json:"ref"`
+	Before     string `json:"before"`
+	After      string `json:"after"`
+	CompareURL string `json:"compare_url"`
+	Commits    []struct {
+		ID      string `json:"id"`
+		Message string `json:"message"`
+		URL     string `json:"url"`
+		Author  struct {
+			Name     string `json:"name"`
+			Email    string `json:"email"`
+			Username string `json:"username"`
+		} `json:"author"`
+		Committer struct {
+			Name     string `json:"name"`
+			Email    string `json:"email"`
+			Username string `json:"username"`
+		} `json:"committer"`
+		Timestamp string `json:"timestamp"`
+	} `json:"commits"`
+	Repository struct {
+		ID    int `json:"id"`
+		Owner struct {
+			ID        int    `json:"id"`
+			Login     string `json:"login"`
+			FullName  string `json:"full_name"`
+			Email     string `json:"email"`
+			AvatarURL string `json:"avatar_url"`
+			Username  string `json:"username"`
+		} `json:"owner"`
+		Name            string `json:"name"`
+		FullName        string `json:"full_name"`
+		Description     string `json:"description"`
+		Private         bool   `json:"private"`
+		Fork            bool   `json:"fork"`
+		HTMLURL         string `json:"html_url"`
+		SSHURL          string `json:"ssh_url"`
+		CloneURL        string `json:"clone_url"`
+		Website         string `json:"website"`
+		StarsCount      int    `json:"stars_count"`
+		ForksCount      int    `json:"forks_count"`
+		WatchersCount   int    `json:"watchers_count"`
+		OpenIssuesCount int    `json:"open_issues_count"`
+		DefaultBranch   string `json:"default_branch"`
+		CreatedAt       string `json:"created_at"`
+		UpdatedAt       string `json:"updated_at"`
+	} `json:"repository"`
+	Pusher struct {
+		ID        int    `json:"id"`
+		Login     string `json:"login"`
+		FullName  string `json:"full_name"`
+		Email     string `json:"email"`
+		AvatarURL string `json:"avatar_url"`
+		Username  string `json:"username"`
+	} `json:"pusher"`
+	Sender struct {
+		ID        int    `json:"id"`
+		Login     string `json:"login"`
+		FullName  string `json:"full_name"`
+		Email     string `json:"email"`
+		AvatarURL string `json:"avatar_url"`
+		Username  string `json:"username"`
+	} `json:"sender"`
 }
 
 func outputForTemplate(giteaTmpl string, tmpl map[string]string) (out string) {
@@ -87,7 +143,7 @@ func outputForTemplate(giteaTmpl string, tmpl map[string]string) (out string) {
 // webhook endpoint URL to their .gitea.yml file:
 //    notifications:
 //        webhooks: http://go-avbot-endpoint.com/gitea_webhook_service
-//
+// 	Gitea webhook definition: https://docs.gitea.io/en-us/webhooks/
 func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *gomatrix.Client) {
 	if err := req.ParseForm(); err != nil {
 		log.WithError(err).Error("Failed to read incoming Gitea webhook form")
@@ -108,19 +164,19 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 		return
 	}
 
-	whForBoard := notif.BoardID
+	repositoryName := notif.Repository.FullName
 
 	logger := log.WithFields(log.Fields{
-		"board": whForBoard,
+		"repo": repositoryName,
 	})
 
 	for roomID, roomData := range s.Rooms {
-		for boardData := range roomData.Boards {
-			if boardData != whForBoard {
+		for boardData := range roomData.Repos {
+			if boardData != repositoryName {
 				continue
 			}
 			msg := gomatrix.TextMessage{
-				Body:    notif.Text,
+				Body:    notif.Commits[0].URL,
 				MsgType: "m.notice",
 			}
 
@@ -148,7 +204,7 @@ func (s *Service) Register(oldService types.Service, client *gomatrix.Client) er
 // PostRegister deletes this service if there are no registered boards.
 func (s *Service) PostRegister(oldService types.Service) {
 	for _, roomData := range s.Rooms {
-		for range roomData.Boards {
+		for range roomData.Repos {
 			return // at least 1 board exists
 		}
 	}
