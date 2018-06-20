@@ -3,6 +3,7 @@ package gitea
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -11,6 +12,7 @@ import (
 	"../../types"
 
 	"git.aventer.biz/AVENTER/gomatrix"
+	"git.aventer.biz/AVENTER/util"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -175,9 +177,17 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 			if boardData != repositoryName {
 				continue
 			}
-			msg := gomatrix.TextMessage{
-				Body:    notif.Commits[0].URL,
-				MsgType: "m.notice",
+
+			var message string
+			message = fmt.Sprintf("Gitea commit from User %s \\\\", notif.Commits[0].Author.Name)
+			message = message + fmt.Sprintf("__%s__ \\\\", notif.Commits[0].Message)
+			message = message + fmt.Sprintf("[Commit](%s) \\\\", notif.Commits[0].URL)
+
+			msg := gomatrix.HTMLMessage{
+				Body:          message,
+				MsgType:       "m.text",
+				Format:        "org.matrix.custom.html",
+				FormattedBody: util.MarkdownRender(message),
 			}
 
 			logger.WithFields(log.Fields{
