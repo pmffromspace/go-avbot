@@ -50,6 +50,9 @@ var ConfigFile string
 // LogDir is the directory where the bot will log in
 var LogDir string
 
+// MinVersion is the BuildVersion Number
+var MinVersion string
+
 // loadFromConfig loads a config file and returns a ConfigFile
 func loadFromConfig(db *database.ServiceDB, configFilePath string) (*api.ConfigFile, error) {
 	// ::Horrible hacks ahead::
@@ -234,7 +237,7 @@ func main() {
 		))
 	}
 
-	log.Infof("GO-AVBOT (%s %s %s %s %s %s)", BindAddress, BaseURL, DatabaseType, DatabaseURL, LogDir, ConfigFile)
+	log.Infof("GO-AVBOT build %s (%s %s %s %s %s %s)", MinVersion, BindAddress, BaseURL, DatabaseType, DatabaseURL, LogDir, ConfigFile)
 
 	setup(http.DefaultServeMux, http.DefaultClient)
 	log.Fatal(http.ListenAndServe(BindAddress, nil))

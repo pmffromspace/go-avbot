@@ -34,7 +34,7 @@ var httpClient = &http.Client{}
 //   {
 //       rooms: {
 //           "!ewfug483gsfe:localhost": {
-//               boards: {
+//               repos: {
 //                   "1" {
 //                   }
 //               }

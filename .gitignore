@@ -3,3 +3,4 @@ config.yaml
 log/*.log*
 data/config.yaml
 .vscode
+app

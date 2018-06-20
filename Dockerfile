@@ -29,6 +29,9 @@ VOLUME /go-avbot/data
 COPY . /go-avbot/
 COPY run.sh /run.sh
 
+RUN cd /go-avbot && \
+    go build -ldflags "-X main.MinVersion=`date -u +%Y%m%d%.H%M%S`" app.go init.go
+
 EXPOSE 4050
 
 ENTRYPOINT ["/run.sh"]
