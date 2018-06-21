@@ -174,7 +174,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 
 	for roomID, roomData := range s.Rooms {
 		for boardData := range roomData.Repos {
-			if boardData != repositoryName {
+			if boardData != repositoryName && boardData != notif.Repository.Owner.Login+"/*" {
 				continue
 			}
 
