@@ -179,7 +179,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 			}
 
 			var message string
-			message = fmt.Sprintf("Gitea commit from User **%s** \n", notif.Commits[0].Author.Name)
+			message = fmt.Sprintf("Gitea commit from User **%s** in Repo **%s**\n", notif.Commits[0].Author.Name, notif.Repository.FullName)
 			message = message + fmt.Sprintf("*%s* \n", notif.Commits[0].Message)
 			message = message + fmt.Sprintf("[Commit](%s) \n", notif.Commits[0].URL)
 
