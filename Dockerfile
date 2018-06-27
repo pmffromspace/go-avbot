@@ -1,17 +1,16 @@
-FROM alpine:3.6
+FROM golang:1.10.0-alpine3.7
 LABEL maintainer="Andreas Peters <support@aventer.biz>"
 
 ENV BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=/go-avbot/data/go-neb.db?_busy_timeout=5000 
 
-ARG BRANCH=v0.0.3
-
-RUN apk add --update git go gcc g++  && \
+RUN apk update && \
+    apk add git gcc libc-dev && \
     go get github.com/sirupsen/logrus && \
-    go get github.com/AVENTER-UG/util && \
+    go get git.aventer.biz/AVENTER/util && \
     go get github.com/mattn/go-sqlite3 && \
     go get github.com/prometheus/client_golang/prometheus && \
     go get github.com/matrix-org/dugong && \
-    go get github.com/AVENTER-UG/gomatrix && \
+    go get git.aventer.biz/AVENTER/gomatrix && \
     go get github.com/mattn/go-shellwords && \
     go get gopkg.in/yaml.v2 && \
     go get golang.org/x/oauth2 && \
@@ -29,6 +28,9 @@ VOLUME /go-avbot/data
 
 COPY . /go-avbot/
 COPY run.sh /run.sh
+
+RUN cd /go-avbot && \
+    go build -ldflags "-X main.MinVersion=`date -u +%Y%m%d%.H%M%S`" app.go init.go
 
 EXPOSE 4050
 

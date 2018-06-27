@@ -11,7 +11,7 @@ import (
 	"../../database"
 	"../../metrics"
 	"../../types"
-	"github.com/AVENTER-UG/util"
+	"git.aventer.biz/AVENTER/util"
 	log "github.com/sirupsen/logrus"
 )
 

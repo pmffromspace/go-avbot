@@ -11,8 +11,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/AVENTER-UG/gomatrix"
-	"github.com/AVENTER-UG/util"
+	"git.aventer.biz/AVENTER/gomatrix"
+	"git.aventer.biz/AVENTER/util"
 	"github.com/google/go-github/github"
 	log "github.com/sirupsen/logrus"
 )

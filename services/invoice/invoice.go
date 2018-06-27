@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"../../types"
-	"github.com/AVENTER-UG/gomatrix"
+	"git.aventer.biz/AVENTER/gomatrix"
 	"github.com/russross/blackfriday"
 	log "github.com/sirupsen/logrus"
 )

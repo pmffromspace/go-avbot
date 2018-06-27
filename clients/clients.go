@@ -13,7 +13,7 @@ import (
 	"../matrix"
 	"../metrics"
 	"../types"
-	"github.com/AVENTER-UG/gomatrix"
+	"git.aventer.biz/AVENTER/gomatrix"
 	shellwords "github.com/mattn/go-shellwords"
 	log "github.com/sirupsen/logrus"
 )

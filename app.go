@@ -16,13 +16,14 @@ import (
 	_ "./realms/github"
 	_ "./services/aws"
 	_ "./services/echo"
+	_ "./services/gitea"
 	_ "./services/github"
 	_ "./services/invoice"
 	_ "./services/pentest"
 	_ "./services/travisci"
 	_ "./services/wekan"
 	"./types"
-	"github.com/AVENTER-UG/util"
+	"git.aventer.biz/AVENTER/util"
 	"github.com/matrix-org/dugong"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/prometheus/client_golang/prometheus"
@@ -48,6 +49,9 @@ var ConfigFile string
 
 // LogDir is the directory where the bot will log in
 var LogDir string
+
+// MinVersion is the BuildVersion Number
+var MinVersion string
 
 // loadFromConfig loads a config file and returns a ConfigFile
 func loadFromConfig(db *database.ServiceDB, configFilePath string) (*api.ConfigFile, error) {
@@ -223,9 +227,7 @@ func main() {
 
 	if LogDir != "" {
 		log.AddHook(dugong.NewFSHook(
-			filepath.Join(LogDir, "info.log"),
-			filepath.Join(LogDir, "warn.log"),
-			filepath.Join(LogDir, "error.log"),
+			filepath.Join(LogDir, "avbot.log"),
 			&log.TextFormatter{
 				TimestampFormat:  "2006-01-02 15:04:05.000000",
 				DisableColors:    true,
@@ -235,7 +237,7 @@ func main() {
 		))
 	}
 
-	log.Infof("GO-AVBOT (%s %s %s %s %s %s)", BindAddress, BaseURL, DatabaseType, DatabaseURL, LogDir, ConfigFile)
+	log.Infof("GO-AVBOT build %s (%s %s %s %s %s %s)", MinVersion, BindAddress, BaseURL, DatabaseType, DatabaseURL, LogDir, ConfigFile)
 
 	setup(http.DefaultServeMux, http.DefaultClient)
 	log.Fatal(http.ListenAndServe(BindAddress, nil))

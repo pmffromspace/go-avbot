@@ -10,7 +10,7 @@ import (
 	"../../database"
 	"../../types"
 
-	"github.com/AVENTER-UG/gomatrix"
+	"git.aventer.biz/AVENTER/gomatrix"
 	log "github.com/sirupsen/logrus"
 )
 

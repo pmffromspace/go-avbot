@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/AVENTER-UG/gomatrix"
+	"git.aventer.biz/AVENTER/gomatrix"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/types"
 )

@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"../../types"
-	"github.com/AVENTER-UG/gomatrix"
+	"git.aventer.biz/AVENTER/gomatrix"
 )
 
 // ServiceType of the Echo service
