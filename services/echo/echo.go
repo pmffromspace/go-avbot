@@ -27,6 +27,12 @@ func (e *Service) Commands(cli *gomatrix.Client) []types.Command {
 				return &gomatrix.TextMessage{"m.notice", strings.Join(args, " ")}, nil
 			},
 		},
+		{
+			Path: []string{"echo", "widget"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return e.cmdCreateTestWidget(roomID, userID, cli, args)
+			},
+		},
 	}
 }
 
@@ -36,4 +42,13 @@ func init() {
 			DefaultService: types.NewDefaultService(serviceID, serviceUserID, ServiceType),
 		}
 	})
+}
+
+func (e *Service) cmdCreateTestWidget(roomID, userID string, cli *gomatrix.Client, args []string) (interface{}, error) {
+	return &gomatrix.WidgetMessage{
+		Type: "im.vector.modular.widgets",
+		URL:  "https://www.aventer.biz/",
+		Name: "AVENTER",
+	}, nil
+
 }
