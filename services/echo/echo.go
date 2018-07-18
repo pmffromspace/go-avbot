@@ -28,9 +28,9 @@ func (e *Service) Commands(cli *gomatrix.Client) []types.Command {
 			},
 		},
 		{
-			Path: []string{"echo", "widget"},
+			Path: []string{"echo", "widget_1"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
-				return e.cmdCreateTestWidget(roomID, userID, cli, args)
+				return cli.CreateWidget(roomID, "widget_1", "grafana", "https://www.aventer.biz", "AVENTER")
 			},
 		},
 	}
@@ -42,13 +42,4 @@ func init() {
 			DefaultService: types.NewDefaultService(serviceID, serviceUserID, ServiceType),
 		}
 	})
-}
-
-func (e *Service) cmdCreateTestWidget(roomID, userID string, cli *gomatrix.Client, args []string) (interface{}, error) {
-	return &gomatrix.WidgetMessage{
-		Type: "grafana",
-		URL:  "https://www.aventer.biz/",
-		Name: "AVENTER",
-	}, nil
-
 }
