@@ -46,7 +46,7 @@ func init() {
 
 func (e *Service) cmdCreateTestWidget(roomID, userID string, cli *gomatrix.Client, args []string) (interface{}, error) {
 	return &gomatrix.WidgetMessage{
-		Type: "im.vector.modular.widgets",
+		Type: "grafana",
 		URL:  "https://www.aventer.biz/",
 		Name: "AVENTER",
 	}, nil
