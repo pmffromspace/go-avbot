@@ -60,6 +60,10 @@ There are still a lot of work. Currently our main focus is the AWS support.
 
 - Receive Webhooks from your gitea repo
 
+### NLP (Natural Language Processing) 
+
+- Gateway to the IKY Framework
+
 ## Software Requirements
 
 ```bash
@@ -111,3 +115,7 @@ go get github.com/aws/aws-sdk-go
 
 - modify repo to git.aventer.biz
 - add gitea support
+
+### v0.0.5
+
+- add nlp support

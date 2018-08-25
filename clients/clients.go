@@ -12,6 +12,7 @@ import (
 	"../database"
 	"../matrix"
 	"../metrics"
+	nlp "../services/nlp"
 	"../types"
 	"git.aventer.biz/AVENTER/gomatrix"
 	shellwords "github.com/mattn/go-shellwords"
@@ -181,30 +182,40 @@ func (c *Clients) onMessageEvent(client *gomatrix.Client, event *gomatrix.Event)
 
 	var responses []interface{}
 
-	for _, service := range services {
-		if body[0] == '!' { // message is a command
-			args, err := shellwords.Parse(body[1:])
-			if err != nil {
-				args = strings.Split(body[1:], " ")
-			}
+	//  Ignore everymessage, if its from the bot byself
+	if event.Sender != client.UserID {
 
-			if response := runCommandForService(service.Commands(client), event, args); response != nil {
-				responses = append(responses, response)
-			}
-		} else { // message isn't a command, it might need expanding
-			expansions := runExpansionsForService(service.Expansions(client), event, body)
-			responses = append(responses, expansions...)
+		// send every message to the natual language processor
+		response := nlp.CmdForwardToNLP(event.RoomID, client.UserID, body)
+		if response != nil {
+			responses = append(responses, response)
 		}
-	}
 
-	for _, content := range responses {
-		if _, err := client.SendMessageEvent(event.RoomID, "m.room.message", content); err != nil {
-			log.WithFields(log.Fields{
-				log.ErrorKey: err,
-				"room_id":    event.RoomID,
-				"user_id":    event.Sender,
-				"content":    content,
-			}).Print("Failed to send command response")
+		for _, service := range services {
+			if body[0] == '!' { // message is a command
+				args, err := shellwords.Parse(body[1:])
+				if err != nil {
+					args = strings.Split(body[1:], " ")
+				}
+
+				if response := runCommandForService(service.Commands(client), event, args); response != nil {
+					responses = append(responses, response)
+				}
+			} else { // message isn't a command, it might need expanding
+				expansions := runExpansionsForService(service.Expansions(client), event, body)
+				responses = append(responses, expansions...)
+			}
+		}
+
+		for _, content := range responses {
+			if _, err := client.SendMessageEvent(event.RoomID, "m.room.message", content); err != nil {
+				log.WithFields(log.Fields{
+					log.ErrorKey: err,
+					"room_id":    event.RoomID,
+					"user_id":    event.Sender,
+					"content":    content,
+				}).Print("Failed to send command response")
+			}
 		}
 	}
 }
