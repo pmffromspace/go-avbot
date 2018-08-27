@@ -123,7 +123,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 			}
 			msg := gomatrix.TextMessage{
 				Body:    notif.Text,
-				MsgType: "m.notice",
+				MsgType: "m.text",
 			}
 
 			logger.WithFields(log.Fields{
