@@ -18,9 +18,9 @@ import (
 // ServiceType of the Echo service
 const ServiceType = "nlp"
 
-// Service represents the Echo service. It has no Config fields.
 type Service struct {
 	types.DefaultService
+	NLPEndpointURL string
 }
 
 // NLPResponse represents the IKY chat response
@@ -73,7 +73,7 @@ func CmdForwardToNLP(roomID, userID string, message string) interface{} {
 
 	log.Println(buf)
 
-	resp, err := http.Post("http://localhost:8080/gateway/api/v1", "application/json", buf)
+	resp, err := http.Post("http://avbotnlp-8080.service.dc.aventer.biz/api/v1", "application/json", buf)
 	if err != nil {
 		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("nlp: Could not talk with the IKY: %s", err)}
 	}
@@ -90,7 +90,8 @@ func CmdForwardToNLP(roomID, userID string, message string) interface{} {
 
 	// if i got nothing from IKY, just ignore it
 	if err != nil {
-		return nil
+		//return nil
+		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("nlp: got crazy things: %s", err)}
 	}
 
 	var strBuffer bytes.Buffer
@@ -106,7 +107,7 @@ func init() {
 
 	ObjectID = make(map[string]NLPResponse)
 
-	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
+	types.RegisterService(func(serviceID, serviceUserID, NLPEndpointURL string) types.Service {
 		return &Service{
 			DefaultService: types.NewDefaultService(serviceID, serviceUserID, ServiceType),
 		}
