@@ -76,6 +76,7 @@ func CmdForwardToNLP(roomID, userID string, message string) interface{} {
 	log.Println(buf)
 
 	resp, err := http.Post("http://avbotnlp.service.dc.aventer.biz:8080/api/v1", "application/json", buf)
+	//resp, err := http.Post("http://localhost:8081/api/v1", "application/json", buf)
 	if err != nil {
 		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("nlp: Could not talk with the IKY: %s", err)}
 	}
@@ -84,6 +85,8 @@ func CmdForwardToNLP(roomID, userID string, message string) interface{} {
 	if err != nil {
 		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("nlp: The IKY ignore me: %s", err)}
 	}
+
+	log.Println(resp.Body)
 
 	body, err := ioutil.ReadAll(resp.Body)
 
