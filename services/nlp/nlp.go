@@ -57,6 +57,8 @@ func CmdForwardToNLP(roomID, userID string, message string) interface{} {
 		decodeResp = ObjectID[userID]
 	} else {
 		decodeResp.Complete = true
+		decodeResp.CurrentNode = ""
+		decodeResp.Owner = userID
 	}
 
 	// remember the message of the user
