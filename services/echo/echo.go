@@ -27,6 +27,12 @@ func (e *Service) Commands(cli *gomatrix.Client) []types.Command {
 				return &gomatrix.TextMessage{"m.notice", strings.Join(args, " ")}, nil
 			},
 		},
+		{
+			Path: []string{"echo", "widget_1"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return cli.CreateWidget(roomID, "widget_1", "grafana", "https://www.aventer.biz", "AVENTER")
+			},
+		},
 	}
 }
 

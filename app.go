@@ -19,6 +19,7 @@ import (
 	_ "./services/gitea"
 	_ "./services/github"
 	_ "./services/invoice"
+	_ "./services/nlp"
 	_ "./services/pentest"
 	_ "./services/travisci"
 	_ "./services/wekan"

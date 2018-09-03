@@ -185,7 +185,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 
 			msg := gomatrix.HTMLMessage{
 				Body:          message,
-				MsgType:       "m.text",
+				MsgType:       "m.notice",
 				Format:        "org.matrix.custom.html",
 				FormattedBody: util.MarkdownRender(message),
 			}
