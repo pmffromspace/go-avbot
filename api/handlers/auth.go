@@ -15,6 +15,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+const unsupportedMethod string = "Unsupported Method"
+const errorParsingRequestJSON string = "Error parsing request JSON"
+
 // RequestAuthSession represents an HTTP handler capable of processing /admin/requestAuthSession requests.
 type RequestAuthSession struct {
 	Db *database.ServiceDB
@@ -43,11 +46,11 @@ type RequestAuthSession struct {
 func (h *RequestAuthSession) OnIncomingRequest(req *http.Request) util.JSONResponse {
 	logger := util.GetLogger(req.Context())
 	if req.Method != "POST" {
-		return util.MessageResponse(405, "Unsupported Method")
+		return util.MessageResponse(405, unsupportedMethod)
 	}
 	var body api.RequestAuthSessionRequest
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-		return util.MessageResponse(400, "Error parsing request JSON")
+		return util.MessageResponse(400, errorParsingResponseJson)
 	}
 	logger.WithFields(log.Fields{
 		"realm_id": body.RealmID,
@@ -100,14 +103,14 @@ type RemoveAuthSession struct {
 func (h *RemoveAuthSession) OnIncomingRequest(req *http.Request) util.JSONResponse {
 	logger := util.GetLogger(req.Context())
 	if req.Method != "POST" {
-		return util.MessageResponse(405, "Unsupported Method")
+		return util.MessageResponse(405, unsupportedMethod)
 	}
 	var body struct {
 		RealmID string
 		UserID  string
 	}
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-		return util.MessageResponse(400, "Error parsing request JSON")
+		return util.MessageResponse(400, errorParsingRequestJSON)
 	}
 	logger.WithFields(log.Fields{
 		"realm_id": body.RealmID,
@@ -201,11 +204,11 @@ type ConfigureAuthRealm struct {
 func (h *ConfigureAuthRealm) OnIncomingRequest(req *http.Request) util.JSONResponse {
 	logger := util.GetLogger(req.Context())
 	if req.Method != "POST" {
-		return util.MessageResponse(405, "Unsupported Method")
+		return util.MessageResponse(405, unsupportedMethod)
 	}
 	var body api.ConfigureAuthRealmRequest
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-		return util.MessageResponse(400, "Error parsing request JSON")
+		return util.MessageResponse(400, errorParsingRequestJSON)
 	}
 
 	if err := body.Check(); err != nil {
@@ -272,14 +275,14 @@ type GetSession struct {
 func (h *GetSession) OnIncomingRequest(req *http.Request) util.JSONResponse {
 	logger := util.GetLogger(req.Context())
 	if req.Method != "POST" {
-		return util.MessageResponse(405, "Unsupported Method")
+		return util.MessageResponse(405, unsupportedMethod)
 	}
 	var body struct {
 		RealmID string
 		UserID  string
 	}
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-		return util.MessageResponse(400, "Error parsing request JSON")
+		return util.MessageResponse(400, errorParsingRequestJSON)
 	}
 
 	if body.RealmID == "" || body.UserID == "" {
