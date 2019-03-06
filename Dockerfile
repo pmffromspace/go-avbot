@@ -7,7 +7,7 @@ COPY . /build/
 RUN apk add git gcc musl-dev && \
     go get -d
 
-RUN GOOS=linux go build -ldflags "-X main.MinVersion=`date -u +%Y%m%d%.H%M%S` -extldflags \"-static\"" -o main app.go init.go
+RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -ldflags "-X main.MinVersion=`date -u +%Y%m%d%.H%M%S` -extldflags \"-static\"" -o main app.go init.go
 
 
 FROM alpine
