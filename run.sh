@@ -5,4 +5,4 @@ cd /go-avbot/
 ls -l
 pwd
 ls -l ./data
-./app $@
+./main $@
