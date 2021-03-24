@@ -7,11 +7,12 @@ import (
 
 	"github.com/aws/aws-sdk-go/service/ec2"
 
-	"../../types"
+	"go-avbot/types"
+
 	log "github.com/sirupsen/logrus"
 
-	"git.aventer.biz/AVENTER/gomatrix"
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/matrix-org/gomatrix"
 )
 
 // ServiceType of the AWS service

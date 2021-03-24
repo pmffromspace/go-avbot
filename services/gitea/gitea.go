@@ -8,11 +8,11 @@ import (
 	"net/http"
 	"strings"
 
-	"../../database"
-	"../../types"
+	"go-avbot/database"
+	"go-avbot/types"
 
-	"git.aventer.biz/AVENTER/gomatrix"
-	"git.aventer.biz/AVENTER/util"
+	util "github.com/AVENTER-UG/util"
+	"github.com/matrix-org/gomatrix"
 	log "github.com/sirupsen/logrus"
 )
 

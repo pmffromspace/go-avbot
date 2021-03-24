@@ -12,13 +12,14 @@ import (
 	"strconv"
 	"strings"
 
-	"../../database"
-	"../../matrix"
-	"../../realms/github"
-	"../../services/github/client"
-	"../../types"
-	"git.aventer.biz/AVENTER/gomatrix"
+	"go-avbot/database"
+	"go-avbot/matrix"
+	"go-avbot/realms/github"
+	"go-avbot/services/github/client"
+	"go-avbot/types"
+
 	gogithub "github.com/google/go-github/github"
+	"github.com/matrix-org/gomatrix"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -73,8 +74,9 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 		}, nil
 	}
 	if len(args) == 0 {
-		return &gomatrix.TextMessage{"m.notice",
-			`Usage: !github create owner/repo "issue title" "description"`}, nil
+		return &gomatrix.TextMessage{
+			MsgType: "m.notice",
+			Body:    `Usage: !github create owner/repo "issue title" "description"`}, nil
 	}
 
 	// We expect the args to look like:
@@ -87,14 +89,16 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 		// look for a default repo
 		defaultRepo := s.defaultRepo(roomID)
 		if defaultRepo == "" {
-			return &gomatrix.TextMessage{"m.notice",
-				`Usage: !github create owner/repo "issue title" "description"`}, nil
+			return &gomatrix.TextMessage{
+				MsgType: "m.notice",
+				Body:    `Usage: !github create owner/repo "issue title" "description"`}, nil
 		}
 		// default repo should pass the regexp
 		ownerRepoGroups = ownerRepoRegex.FindStringSubmatch(defaultRepo)
 		if len(ownerRepoGroups) == 0 {
-			return &gomatrix.TextMessage{"m.notice",
-				`Malformed default repo. Usage: !github create owner/repo "issue title" "description"`}, nil
+			return &gomatrix.TextMessage{
+				MsgType: "m.notice",
+				Body:    `Malformed default repo. Usage: !github create owner/repo "issue title" "description"`}, nil
 		}
 
 		// insert the default as the first arg to reuse the same indices
@@ -129,7 +133,7 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 		return nil, fmt.Errorf("Failed to create issue. HTTP %d", res.StatusCode)
 	}
 
-	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Created issue: %s", *issue.HTMLURL)}, nil
+	return gomatrix.TextMessage{MsgType: "m.notice", Body: fmt.Sprintf("Created issue: %s", *issue.HTMLURL)}, nil
 }
 
 func (s *Service) expandIssue(roomID, userID, owner, repo string, issueNum int) interface{} {
@@ -146,8 +150,8 @@ func (s *Service) expandIssue(roomID, userID, owner, repo string, issueNum int) 
 	}
 
 	return &gomatrix.TextMessage{
-		"m.notice",
-		fmt.Sprintf("%s : %s", *i.HTMLURL, *i.Title),
+		MsgType: "m.notice",
+		Body:    fmt.Sprintf("%s : %s", *i.HTMLURL, *i.Title),
 	}
 }
 
@@ -168,8 +172,8 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 			Path: []string{"github", "help"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return &gomatrix.TextMessage{
-					"m.notice",
-					fmt.Sprintf(`!github create owner/repo "title text" "description text"`),
+					MsgType: "m.notice",
+					Body:    fmt.Sprintf(`!github create owner/repo "title text" "description text"`),
 				}, nil
 			},
 		},

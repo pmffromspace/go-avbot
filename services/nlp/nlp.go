@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"../../types"
-	"git.aventer.biz/AVENTER/gomatrix"
+	"github.com/matrix-org/gomatrix"
 	"github.com/russross/blackfriday"
 )
 

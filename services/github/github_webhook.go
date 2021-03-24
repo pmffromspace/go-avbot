@@ -7,12 +7,13 @@ import (
 	"sort"
 	"strings"
 
-	"../../database"
-	"../../services/github/client"
-	"../../services/github/webhook"
-	"../../types"
-	"git.aventer.biz/AVENTER/gomatrix"
+	"go-avbot/database"
+	"go-avbot/services/github/client"
+	"go-avbot/services/github/webhook"
+	"go-avbot/types"
+
 	gogithub "github.com/google/go-github/github"
+	"github.com/matrix-org/gomatrix"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -292,7 +293,6 @@ func (s *WebhookService) createHook(cli *gogithub.Client, ownerRepo string) erro
 	owner := o[0]
 	repo := o[1]
 	// make a hook for all GH events since we'll filter it when we receive webhook requests
-	name := "web" // https://developer.github.com/v3/repos/hooks/#create-a-hook
 	cfg := map[string]interface{}{
 		"content_type": "json",
 		"url":          s.webhookEndpointURL,
@@ -302,7 +302,7 @@ func (s *WebhookService) createHook(cli *gogithub.Client, ownerRepo string) erro
 	}
 	events := []string{"push", "pull_request", "issues", "issue_comment", "pull_request_review_comment"}
 	_, res, err := cli.Repositories.CreateHook(context.Background(), owner, repo, &gogithub.Hook{
-		Name:   &name,
+
 		Config: cfg,
 		Events: events,
 	})

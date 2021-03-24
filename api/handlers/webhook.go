@@ -5,9 +5,10 @@ import (
 	"net/http"
 	"strings"
 
-	"../../clients"
-	"../../database"
-	"../../metrics"
+	"go-avbot/clients"
+	"go-avbot/database"
+	"go-avbot/metrics"
+
 	log "github.com/sirupsen/logrus"
 )
 

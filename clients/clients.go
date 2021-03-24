@@ -8,13 +8,14 @@ import (
 	"sync"
 	"time"
 
-	"../api"
-	"../database"
-	"../matrix"
-	"../metrics"
-	nlp "../services/nlp"
-	"../types"
-	"git.aventer.biz/AVENTER/gomatrix"
+	"go-avbot/api"
+	"go-avbot/database"
+	"go-avbot/matrix"
+	"go-avbot/metrics"
+
+	"go-avbot/types"
+
+	"github.com/matrix-org/gomatrix"
 	shellwords "github.com/mattn/go-shellwords"
 	log "github.com/sirupsen/logrus"
 )
@@ -186,10 +187,12 @@ func (c *Clients) onMessageEvent(client *gomatrix.Client, event *gomatrix.Event)
 	if event.Sender != client.UserID {
 
 		// send every message to the natual language processor
-		response := nlp.CmdForwardToNLP(event.RoomID, client.UserID, body)
-		if response != nil {
-			responses = append(responses, response)
-		}
+		/*
+			response := nlp.CmdForwardToNLP(event.RoomID, client.UserID, body)
+			if response != nil {
+				responses = append(responses, response)
+			}
+		*/
 
 		for _, service := range services {
 			if body[0] == '!' { // message is a command
@@ -256,7 +259,7 @@ func runCommandForService(cmds []types.Command, event *gomatrix.Event, arguments
 			}).Warn("Command returned both error and content.")
 		}
 		metrics.IncrementCommand(bestMatch.Path[0], metrics.StatusFailure)
-		content = gomatrix.TextMessage{"m.notice", err.Error()}
+		content = gomatrix.TextMessage{MsgType: "m.notice", Body: err.Error()}
 	} else {
 		metrics.IncrementCommand(bestMatch.Path[0], metrics.StatusSuccess)
 	}
