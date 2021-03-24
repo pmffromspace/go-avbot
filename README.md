@@ -1,18 +1,8 @@
 # go-avbot - the aventer bot
 
-## Github Repo
-
-[https://git.aventer.biz/AVENTER](https://git.aventer.biz/AVENTER)
-
-## Security
-
-We verify our image automatically by clair. If you want to see the current security status, please have a look in travis-ci.
-
 ## What is go-avbot
 
 AVBOT is our digital working partner. He is helping us with our daily business. From creating and sending out invoices to install server applications. AVBOT is based on [go-neb](https://github.com/matrix-org/go-neb), a matrix BOT developed in golang.
-
-Our Kanban Board is [here](https://wekan.aventer.biz/b/XePZjKD4mK3eFY8MS/go-avbot)
 
 ## License
 
@@ -87,35 +77,3 @@ go get github.com/aws/aws-sdk-go
 - [Matrix API](https://www.matrix.org/docs/spec/r0.0.0/client_server.html)
 - [AWS API](https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/setting-up.html)
 - [OpenVAS](http://docs.greenbone.net/API/OMP/omp-7.0.html)
-
-## Changelog
-
-### v0.0.1
-
-- aws: add show instances of all configured regions
-- aws: add start and stop of instances
-- aws: add search of images
-- invoice: add create of invoices
-- invoice: add view invoices of a user
-
-### v0.0.2
-
-- pentest: give out a list of all scanner configs
-- pentest: start a pentest
-- pentest: get a status of the pentest
-- pentest: download the report file
-- aws: add run instances
-
-### v0.0.3
-
-- add travis webhook support (fork from the original project)
-- add wekan webhook support (is a fork of the travis version)
-
-### v0.0.4
-
-- modify repo to git.aventer.biz
-- add gitea support
-
-### v0.0.5
-
-- add nlp support
