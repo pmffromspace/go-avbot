@@ -4,8 +4,9 @@ package echo
 import (
 	"strings"
 
-	"../../types"
-	"git.aventer.biz/AVENTER/gomatrix"
+	"go-avbot/types"
+
+	"github.com/matrix-org/gomatrix"
 )
 
 // ServiceType of the Echo service
@@ -24,13 +25,7 @@ func (e *Service) Commands(cli *gomatrix.Client) []types.Command {
 		{
 			Path: []string{"echo"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
-				return &gomatrix.TextMessage{"m.notice", strings.Join(args, " ")}, nil
-			},
-		},
-		{
-			Path: []string{"echo", "widget_1"},
-			Command: func(roomID, userID string, args []string) (interface{}, error) {
-				return cli.CreateWidget(roomID, "widget_1", "grafana", "https://www.aventer.biz", "AVENTER")
+				return &gomatrix.TextMessage{MsgType: "m.notice", Body: strings.Join(args, " ")}, nil
 			},
 		},
 	}

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"git.aventer.biz/AVENTER/gomatrix"
+	"github.com/matrix-org/gomatrix"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/aws/aws-sdk-go/aws"

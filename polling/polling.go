@@ -5,9 +5,10 @@ import (
 	"sync"
 	"time"
 
-	"../clients"
-	"../database"
-	"../types"
+	"go-avbot/clients"
+	"go-avbot/database"
+	"go-avbot/types"
+
 	log "github.com/sirupsen/logrus"
 )
 

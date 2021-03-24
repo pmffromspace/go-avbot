@@ -7,12 +7,13 @@ import (
 	"sort"
 	"strings"
 
-	"../../database"
-	"../../services/github/client"
-	"../../services/github/webhook"
-	"../../types"
-	"git.aventer.biz/AVENTER/gomatrix"
+	"go-avbot/database"
+	"go-avbot/services/github/client"
+	"go-avbot/services/github/webhook"
+	"go-avbot/types"
+
 	gogithub "github.com/google/go-github/github"
+	"github.com/matrix-org/gomatrix"
 	log "github.com/sirupsen/logrus"
 )
 

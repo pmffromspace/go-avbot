@@ -7,15 +7,16 @@ import (
 	"net/http"
 	"sync"
 
-	"../../api"
-	"../../clients"
-	"../../database"
-	"../../matrix"
-	"../../metrics"
-	"../../polling"
-	"../../types"
-	"git.aventer.biz/AVENTER/gomatrix"
+	"go-avbot/api"
+	"go-avbot/clients"
+	"go-avbot/database"
+	"go-avbot/matrix"
+	"go-avbot/metrics"
+	"go-avbot/polling"
+	"go-avbot/types"
+
 	"git.aventer.biz/AVENTER/util"
+	"github.com/matrix-org/gomatrix"
 	log "github.com/sirupsen/logrus"
 )
 
