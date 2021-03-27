@@ -76,4 +76,4 @@ go get github.com/aws/aws-sdk-go
 
 - [Matrix API](https://www.matrix.org/docs/spec/r0.0.0/client_server.html)
 - [AWS API](https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/setting-up.html)
-- [OpenVAS](http://docs.greenbone.net/API/OMP/omp-7.0.html)
+- [OpenVAS](https://docs.greenbone.net/API/GMP/gmp-20.08.html)

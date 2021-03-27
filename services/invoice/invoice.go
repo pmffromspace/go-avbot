@@ -97,7 +97,7 @@ func (s *Service) cmdCreateInvoice(roomID, userID string, args []string) (interf
 	log.Info("Service: Invoice: createInvoice: Customer=", customer)
 
 	reader := strings.NewReader(fmt.Sprintf(`{"func":"createInvoice","customer":"%s","unitprice":"%s","quantity":"%s","period":"%s","description":"%s"}`, customer, unitprice, quantity, period, description))
-	request, err := http.NewRequest("POST", "http://localhost:8888/jsonrpc.php", reader)
+	request, err := http.NewRequest("POST", "http://localhost:8777/jsonrpc.php", reader)
 
 	if err != nil {
 		return &gomatrix.TextMessage{MsgType: "m.notice", Body: "There is a connection error to the gateway"}, nil
@@ -148,7 +148,6 @@ func (s *Service) cmdInvoiceGet(roomID, userID string, args []string) (interface
 	res, err := client.Do(request)
 
 	if err != nil {
-		fmt.Errorf("Failed to create issue. HTTP %d", res.StatusCode)
 		return &gomatrix.TextMessage{MsgType: "m.notice", Body: "There is a connection error to the gateway"}, nil
 	}
 	defer res.Body.Close()
