@@ -7,7 +7,7 @@ import (
 	"go-avbot/api"
 	"go-avbot/clients"
 
-	"git.aventer.biz/AVENTER/util"
+	"github.com/AVENTER-UG/util/util"
 )
 
 // ConfigureClient represents an HTTP handler capable of processing /admin/configureClient requests.
@@ -22,24 +22,26 @@ type ConfigureClient struct {
 // if the old ClientConfig DisplayName differs from the new ClientConfig DisplayName.
 //
 // Request:
-//  POST /admin/configureClient
-//  {
-//      "UserID": "@my_bot:localhost",
-//      "HomeserverURL": "http://localhost:8008",
-//      "Sync": true,
-//      "DisplayName": "My Bot"
-//  }
+//
+//	POST /admin/configureClient
+//	{
+//	    "UserID": "@my_bot:localhost",
+//	    "HomeserverURL": "http://localhost:8008",
+//	    "Sync": true,
+//	    "DisplayName": "My Bot"
+//	}
 //
 // Response:
-//  HTTP/1.1 200 OK
-//  {
-//       "OldClient": {
-//         // The old api.ClientConfig
-//       },
-//       "NewClient": {
-//         // The new api.ClientConfig
-//       }
-//  }
+//
+//	HTTP/1.1 200 OK
+//	{
+//	     "OldClient": {
+//	       // The old api.ClientConfig
+//	     },
+//	     "NewClient": {
+//	       // The new api.ClientConfig
+//	     }
+//	}
 func (s *ConfigureClient) OnIncomingRequest(req *http.Request) util.JSONResponse {
 	if req.Method != "POST" {
 		return util.MessageResponse(405, "Unsupported Method")

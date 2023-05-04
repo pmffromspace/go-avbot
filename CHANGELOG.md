@@ -34,3 +34,11 @@
 
 - change to the offcial gomatrix library
 - support go mod
+
+## v0.0.7
+
+- go mod update
+
+## v0.0.8
+
+- go mod update

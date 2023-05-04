@@ -15,8 +15,8 @@ import (
 	"go-avbot/polling"
 	"go-avbot/types"
 
-	"git.aventer.biz/AVENTER/util"
-	"github.com/matrix-org/gomatrix"
+	"github.com/AVENTER-UG/util/util"
+	"github.com/AVENTER-UG/gomatrix"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -56,27 +56,30 @@ func (s *ConfigureService) getMutexForServiceID(serviceID string) *sync.Mutex {
 // The request body MUST be of type "api.ConfigureServiceRequest".
 //
 // Request:
-//  POST /admin/configureService
-//  {
-//      "ID": "my_service_id",
-//      "Type": "service-type",
-//      "UserID": "@my_bot:localhost",
-//      "Config": {
-//          // service-specific config information
-//      }
-//  }
+//
+//	POST /admin/configureService
+//	{
+//	    "ID": "my_service_id",
+//	    "Type": "service-type",
+//	    "UserID": "@my_bot:localhost",
+//	    "Config": {
+//	        // service-specific config information
+//	    }
+//	}
+//
 // Response:
-//  HTTP/1.1 200 OK
-//  {
-//      "ID": "my_service_id",
-//      "Type": "service-type",
-//      "OldConfig": {
-//          // old service-specific config information
-//      },
-//      "NewConfig": {
-//          // new service-specific config information
-//      },
-//  }
+//
+//	HTTP/1.1 200 OK
+//	{
+//	    "ID": "my_service_id",
+//	    "Type": "service-type",
+//	    "OldConfig": {
+//	        // old service-specific config information
+//	    },
+//	    "NewConfig": {
+//	        // new service-specific config information
+//	    },
+//	}
 func (s *ConfigureService) OnIncomingRequest(req *http.Request) util.JSONResponse {
 	if req.Method != "POST" {
 		return util.MessageResponse(405, "Unsupported Method")
@@ -179,19 +182,22 @@ type GetService struct {
 // the service ID to get.
 //
 // Request:
-//  POST /admin/getService
-//  {
-//      "ID": "my_service_id"
-//  }
+//
+//	POST /admin/getService
+//	{
+//	    "ID": "my_service_id"
+//	}
+//
 // Response:
-//  HTTP/1.1 200 OK
-//  {
-//      "ID": "my_service_id",
-//      "Type": "github",
-//      "Config": {
-//          // service-specific config information
-//      }
-//  }
+//
+//	HTTP/1.1 200 OK
+//	{
+//	    "ID": "my_service_id",
+//	    "Type": "github",
+//	    "Config": {
+//	        // service-specific config information
+//	    }
+//	}
 func (h *GetService) OnIncomingRequest(req *http.Request) util.JSONResponse {
 	if req.Method != "POST" {
 		return util.MessageResponse(405, "Unsupported Method")

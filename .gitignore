@@ -8,3 +8,4 @@ vendor/*
 app
 go-avbot
 init
+.containername
