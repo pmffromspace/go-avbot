@@ -10,9 +10,9 @@ import (
 	"net/http"
 	"time"
 
-	"../../types"
 	"github.com/matrix-org/gomatrix"
 	"github.com/russross/blackfriday"
+	"go-avbot/types"
 )
 
 // ServiceType of the Echo service

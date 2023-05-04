@@ -6,3 +6,5 @@ data/*
 vendor/*
 .vscode
 app
+go-avbot
+init

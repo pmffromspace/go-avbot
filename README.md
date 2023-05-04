@@ -4,6 +4,15 @@
 
 AVBOT is our digital working partner. He is helping us with our daily business. From creating and sending out invoices to install server applications. AVBOT is based on [go-neb](https://github.com/matrix-org/go-neb), a matrix BOT developed in golang.
 
+
+## How to use it?
+
+First we have to create a config.yaml inside of data directory that we have to mount into the container. A sample of these config can be found in our Github repository.
+
+```bash
+docker run -v ./data:/go-avbot/data:rw avhost/go-avbot:latest 
+```
+
 ## License
 
 go-neb is under the Apache License. To make it more complicated, our code are under GPL. These are:
