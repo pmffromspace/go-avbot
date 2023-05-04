@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"../api"
-	"../types"
+	"go-avbot/api"
+	"go-avbot/types"
 )
 
 const schemaSQL = `

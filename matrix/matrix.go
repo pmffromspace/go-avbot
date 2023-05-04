@@ -3,9 +3,10 @@ package matrix
 import (
 	"encoding/json"
 
-	"../api"
-	"../database"
-	"git.aventer.biz/AVENTER/gomatrix"
+	"go-avbot/api"
+	"go-avbot/database"
+
+	"github.com/matrix-org/gomatrix"
 	log "github.com/sirupsen/logrus"
 )
 

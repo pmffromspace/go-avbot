@@ -10,9 +10,10 @@ import (
 	"net/http"
 	"net/url"
 
-	"../../database"
-	"../../services/github/client"
-	"../../types"
+	"go-avbot/database"
+	"go-avbot/services/github/client"
+	"go-avbot/types"
+
 	"github.com/google/go-github/github"
 	log "github.com/sirupsen/logrus"
 )

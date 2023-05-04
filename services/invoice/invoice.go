@@ -8,8 +8,9 @@ import (
 	"net/http"
 	"strings"
 
-	"../../types"
-	"git.aventer.biz/AVENTER/gomatrix"
+	"go-avbot/types"
+
+	"github.com/matrix-org/gomatrix"
 	"github.com/russross/blackfriday"
 	log "github.com/sirupsen/logrus"
 )
@@ -48,7 +49,7 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 				if strings.Contains(s.AllowedUsers, userID) {
 					return s.cmdInvoiceGet(roomID, userID, args)
 				} else {
-					return &gomatrix.TextMessage{"m.notice", "U are not allowed to use this function"}, nil
+					return &gomatrix.TextMessage{MsgType: "m.notice", Body: "U are not allowed to use this function"}, nil
 				}
 			},
 		},
@@ -56,9 +57,9 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 			Path: []string{"invoice", "acl"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				if strings.Contains(s.AllowedUsers, userID) {
-					return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("Allowed Users: %s", s.AllowedUsers)}, nil
+					return &gomatrix.TextMessage{MsgType: "m.notice", Body: fmt.Sprintf("Allowed Users: %s", s.AllowedUsers)}, nil
 				} else {
-					return &gomatrix.TextMessage{"m.notice", "U are not allowed to use this function"}, nil
+					return &gomatrix.TextMessage{MsgType: "m.notice", Body: "U are not allowed to use this function"}, nil
 				}
 			},
 		},
@@ -67,8 +68,8 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				if len(args) < 5 {
 					return &gomatrix.TextMessage{
-						"m.notice",
-						fmt.Sprintf(`Missing parameters. Have a look with !invoice help"`),
+						MsgType: "m.notice",
+						Body:    fmt.Sprintf(`Missing parameters. Have a look with !invoice help"`),
 					}, nil
 				}
 				return s.cmdCreateInvoice(roomID, userID, args)
@@ -96,10 +97,10 @@ func (s *Service) cmdCreateInvoice(roomID, userID string, args []string) (interf
 	log.Info("Service: Invoice: createInvoice: Customer=", customer)
 
 	reader := strings.NewReader(fmt.Sprintf(`{"func":"createInvoice","customer":"%s","unitprice":"%s","quantity":"%s","period":"%s","description":"%s"}`, customer, unitprice, quantity, period, description))
-	request, err := http.NewRequest("POST", "http://localhost:8888/jsonrpc.php", reader)
+	request, err := http.NewRequest("POST", "http://localhost:8777/jsonrpc.php", reader)
 
 	if err != nil {
-		return &gomatrix.TextMessage{"m.notice", "There is a connection error to the gateway"}, nil
+		return &gomatrix.TextMessage{MsgType: "m.notice", Body: "There is a connection error to the gateway"}, nil
 	}
 
 	client := &http.Client{}
@@ -107,20 +108,20 @@ func (s *Service) cmdCreateInvoice(roomID, userID string, args []string) (interf
 
 	if err != nil {
 		fmt.Errorf("Failed to create issue. HTTP %d", res.StatusCode)
-		return &gomatrix.TextMessage{"m.notice", "There is a connection error to the gateway"}, nil
+		return &gomatrix.TextMessage{MsgType: "m.notice", Body: "There is a connection error to the gateway"}, nil
 	}
 	defer res.Body.Close()
 
 	// read the body and convert it to json
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("Dont know whats wrong. But I could not decode the gateways body.")}, nil
+		return &gomatrix.TextMessage{MsgType: "m.notice", Body: fmt.Sprintf("Dont know whats wrong. But I could not decode the gateways body.")}, nil
 	}
 	var str Invoice
 	err = json.Unmarshal(body, &str)
 
 	if err != nil {
-		return &gomatrix.TextMessage{"m.notice", "There is a connection error to the gateway"}, nil
+		return &gomatrix.TextMessage{MsgType: "m.notice", Body: "There is a connection error to the gateway"}, nil
 	}
 
 	// create a list of invoices
@@ -140,28 +141,27 @@ func (s *Service) cmdInvoiceGet(roomID, userID string, args []string) (interface
 	request, err := http.NewRequest("POST", "http://localhost:8888/jsonrpc.php", reader)
 
 	if err != nil {
-		return &gomatrix.TextMessage{"m.notice", "There is a connection error to the gateway"}, nil
+		return &gomatrix.TextMessage{MsgType: "m.notice", Body: "There is a connection error to the gateway"}, nil
 	}
 
 	client := &http.Client{}
 	res, err := client.Do(request)
 
 	if err != nil {
-		fmt.Errorf("Failed to create issue. HTTP %d", res.StatusCode)
-		return &gomatrix.TextMessage{"m.notice", "There is a connection error to the gateway"}, nil
+		return &gomatrix.TextMessage{MsgType: "m.notice", Body: "There is a connection error to the gateway"}, nil
 	}
 	defer res.Body.Close()
 
 	// read the body and convert it to json
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("Dont know whats wrong. But I could not decode the gateways body.")}, nil
+		return &gomatrix.TextMessage{MsgType: "m.notice", Body: fmt.Sprintf("Dont know whats wrong. But I could not decode the gateways body.")}, nil
 	}
 	var str Invoice
 	err = json.Unmarshal(body, &str)
 
 	if err != nil {
-		return &gomatrix.TextMessage{"m.notice", "There is a connection error to the gateway"}, nil
+		return &gomatrix.TextMessage{MsgType: "m.notice", Body: "There is a connection error to the gateway"}, nil
 	}
 
 	// create a list of invoices

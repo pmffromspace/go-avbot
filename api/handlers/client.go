@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"../../api"
-	"../../clients"
+	"go-avbot/api"
+	"go-avbot/clients"
+
 	"git.aventer.biz/AVENTER/util"
 )
 

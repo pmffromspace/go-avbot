@@ -7,10 +7,11 @@ import (
 	"net/http"
 	"strings"
 
-	"../../api"
-	"../../database"
-	"../../metrics"
-	"../../types"
+	"go-avbot/api"
+	"go-avbot/database"
+	"go-avbot/metrics"
+	"go-avbot/types"
+
 	"git.aventer.biz/AVENTER/util"
 	log "github.com/sirupsen/logrus"
 )

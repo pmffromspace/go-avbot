@@ -1,8 +1,8 @@
 package database
 
 import (
-	"../api"
-	"../types"
+	"go-avbot/api"
+	"go-avbot/types"
 )
 
 // Storer is the interface which needs to be conformed to in order to persist Go-NEB data

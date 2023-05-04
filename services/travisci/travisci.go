@@ -10,10 +10,10 @@ import (
 	"strings"
 	"time"
 
-	"../../database"
-	"../../types"
+	"go-avbot/database"
+	"go-avbot/types"
 
-	"git.aventer.biz/AVENTER/gomatrix"
+	"github.com/matrix-org/gomatrix"
 	log "github.com/sirupsen/logrus"
 )
 

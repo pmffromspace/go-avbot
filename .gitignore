@@ -2,5 +2,9 @@ go-neb.db
 config.yaml
 log/*.log*
 data/config.yaml
+data/*
+vendor/*
 .vscode
 app
+go-avbot
+init

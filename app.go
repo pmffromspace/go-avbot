@@ -8,28 +8,24 @@ import (
 	_ "net/http/pprof"
 	"path/filepath"
 
-	"./api"
-	"./api/handlers"
-	"./clients"
-	"./database"
-	"./polling"
-	_ "./realms/github"
-	_ "./services/aws"
-	_ "./services/echo"
-	_ "./services/gitea"
-	_ "./services/github"
-	_ "./services/invoice"
-	_ "./services/nlp"
-	_ "./services/pentest"
-	_ "./services/travisci"
-	_ "./services/wekan"
-	"./types"
-	"git.aventer.biz/AVENTER/util"
+	_ "go-avbot/realms/github"
+	_ "go-avbot/services/echo"
+	_ "go-avbot/services/gitea"
+	_ "go-avbot/services/github"
+	_ "go-avbot/services/invoice"
+	_ "go-avbot/services/pentest"
+	_ "go-avbot/services/travisci"
+	_ "go-avbot/services/wekan"
+	"go-avbot/types"
+
+	"go-avbot/api"
+	"go-avbot/clients"
+	"go-avbot/database"
+	"go-avbot/polling"
+
 	"github.com/matrix-org/dugong"
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/prometheus/client_golang/prometheus"
 	log "github.com/sirupsen/logrus"
-
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -193,14 +189,6 @@ func setup(mux *http.ServeMux, matrixClient *http.Client) {
 		log.WithError(err).Panic("Failed to start up clients")
 	}
 
-	// Handle non-admin paths for normal NEB functioning
-	mux.Handle("/metrics", prometheus.Handler())
-	mux.Handle("/test", prometheus.InstrumentHandler("test", util.MakeJSONAPI(&handlers.Heartbeat{})))
-	wh := handlers.NewWebhook(db, clients)
-	mux.HandleFunc("/services/hooks/", prometheus.InstrumentHandlerFunc("webhookHandler", util.Protect(wh.Handle)))
-	rh := &handlers.RealmRedirect{db}
-	mux.HandleFunc("/realms/redirects/", prometheus.InstrumentHandlerFunc("realmRedirectHandler", util.Protect(rh.Handle)))
-
 	// Read exclusively from the config file if one was supplied.
 	// Otherwise, add HTTP listeners for new Services/Sessions/Clients/etc.
 	if ConfigFile != "" {
@@ -209,14 +197,6 @@ func setup(mux *http.ServeMux, matrixClient *http.Client) {
 		}
 
 		log.Info("Inserted ", len(cfg.Services), " services")
-	} else {
-		mux.Handle("/admin/getService", prometheus.InstrumentHandler("getService", util.MakeJSONAPI(&handlers.GetService{db})))
-		mux.Handle("/admin/getSession", prometheus.InstrumentHandler("getSession", util.MakeJSONAPI(&handlers.GetSession{db})))
-		mux.Handle("/admin/configureClient", prometheus.InstrumentHandler("configureClient", util.MakeJSONAPI(&handlers.ConfigureClient{clients})))
-		mux.Handle("/admin/configureService", prometheus.InstrumentHandler("configureService", util.MakeJSONAPI(handlers.NewConfigureService(db, clients))))
-		mux.Handle("/admin/configureAuthRealm", prometheus.InstrumentHandler("configureAuthRealm", util.MakeJSONAPI(&handlers.ConfigureAuthRealm{db})))
-		mux.Handle("/admin/requestAuthSession", prometheus.InstrumentHandler("requestAuthSession", util.MakeJSONAPI(&handlers.RequestAuthSession{db})))
-		mux.Handle("/admin/removeAuthSession", prometheus.InstrumentHandler("removeAuthSession", util.MakeJSONAPI(&handlers.RemoveAuthSession{db})))
 	}
 	polling.SetClients(clients)
 	if err := polling.Start(); err != nil {
