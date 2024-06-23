@@ -3,7 +3,7 @@
 // This includes detail on the API paths and top-level JSON keys. For specific service JSON,
 // see the service you're interested in.
 //
-// See also
+// # See also
 //
 // Package "api" for the format of the JSON request bodies.
 package handlers
@@ -11,7 +11,7 @@ package handlers
 import (
 	"net/http"
 
-	"git.aventer.biz/AVENTER/util"
+	"github.com/AVENTER-UG/util/util"
 )
 
 // Heartbeat implements the heartbeat API
@@ -20,12 +20,13 @@ type Heartbeat struct{}
 // OnIncomingRequest returns an empty JSON object which can be used to detect liveness of Go-NEB.
 //
 // Request:
-//  GET /test
 //
+//	GET /test
 //
 // Response:
-//  HTTP/1.1 200 OK
-//  {}
+//
+//	HTTP/1.1 200 OK
+//	{}
 func (*Heartbeat) OnIncomingRequest(req *http.Request) util.JSONResponse {
 	return util.JSONResponse{
 		Code: 200,

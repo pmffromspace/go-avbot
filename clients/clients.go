@@ -15,7 +15,7 @@ import (
 
 	"go-avbot/types"
 
-	"github.com/matrix-org/gomatrix"
+	"github.com/AVENTER-UG/gomatrix"
 	shellwords "github.com/mattn/go-shellwords"
 	log "github.com/sirupsen/logrus"
 )
@@ -218,6 +218,7 @@ func (c *Clients) onMessageEvent(client *gomatrix.Client, event *gomatrix.Event)
 					"user_id":    event.Sender,
 					"content":    content,
 				}).Print("Failed to send command response")
+				fmt.Printf("%+v\n", content)
 			}
 		}
 	}
@@ -380,6 +381,9 @@ func (c *Clients) newClient(config api.ClientConfig) (*gomatrix.Client, error) {
 		"auto_join_rooms": config.AutoJoinRooms,
 		"since":           nebStore.LoadNextBatch(config.UserID),
 	}).Info("Created new client")
+
+	a, _ := client.WhoAmI()
+	fmt.Println(a)
 
 	if config.Sync {
 		go func() {

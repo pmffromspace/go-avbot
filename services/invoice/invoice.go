@@ -10,7 +10,7 @@ import (
 
 	"go-avbot/types"
 
-	"github.com/matrix-org/gomatrix"
+	"github.com/AVENTER-UG/gomatrix"
 	"github.com/russross/blackfriday"
 	log "github.com/sirupsen/logrus"
 )

@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/matrix-org/gomatrix"
+	"github.com/AVENTER-UG/gomatrix"
 	"github.com/russross/blackfriday"
 	"go-avbot/types"
 )

@@ -3,18 +3,18 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	_ "net/http/pprof"
+	"os"
 	"path/filepath"
 
 	_ "go-avbot/realms/github"
 	_ "go-avbot/services/echo"
 	_ "go-avbot/services/gitea"
-	_ "go-avbot/services/github"
 	_ "go-avbot/services/invoice"
 	_ "go-avbot/services/pentest"
 	_ "go-avbot/services/travisci"
+	_ "go-avbot/services/unifi_protect"
 	_ "go-avbot/services/wekan"
 	"go-avbot/types"
 
@@ -65,7 +65,7 @@ func loadFromConfig(db *database.ServiceDB, configFilePath string) (*api.ConfigF
 	// YAML bytes -> map[interface]interface -> map[string]interface -> JSON bytes -> NEB types
 
 	// Convert to YAML bytes
-	contents, err := ioutil.ReadFile(configFilePath)
+	contents, err := os.ReadFile(configFilePath)
 	if err != nil {
 		return nil, err
 	}

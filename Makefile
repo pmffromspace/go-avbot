@@ -52,6 +52,7 @@ push:
 update-gomod:
 	go get -u
 	go mod tidy	
+	go mod vendor
 
 seccheck:
 	grype --add-cpes-if-none .
@@ -61,4 +62,4 @@ sboom:
 	syft dir:. > sbom.txt
 	syft dir:. -o json > sbom.json
 
-all: build seccheck sboom push
+all: build seccheck sboom

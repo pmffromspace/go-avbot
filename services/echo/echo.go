@@ -6,7 +6,7 @@ import (
 
 	"go-avbot/types"
 
-	"github.com/matrix-org/gomatrix"
+	"github.com/AVENTER-UG/gomatrix"
 )
 
 // ServiceType of the Echo service
