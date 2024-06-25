@@ -19,13 +19,13 @@ func init() {
 }
 
 type WebsocketEvent struct {
-	nvr          *NVR
+	nvr          *Service
 	Events       chan *WsMessage
 	socket       *websocket.Conn
 	disconnected chan bool
 }
 
-func NewWebsocketEvent(nvr *NVR) (*WebsocketEvent, error) {
+func NewWebsocketEvent(nvr *Service) (*WebsocketEvent, error) {
 	unifiProtectWebsocket := &WebsocketEvent{
 		nvr:          nvr,
 		Events:       make(chan *WsMessage),
@@ -57,7 +57,7 @@ func (l *WebsocketEvent) connectWs() error {
 	log.Info("Connecting to WS")
 	u := url.URL{
 		Scheme: "wss",
-		Host:   fmt.Sprintf("%s:%d", l.nvr.host, l.nvr.port),
+		Host:   fmt.Sprintf("%s:%d", l.nvr.Host, l.nvr.Port),
 		Path:   "/proxy/protect/ws/updates",
 	}
 

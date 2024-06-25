@@ -2,10 +2,8 @@
 package unifi_protect
 
 import (
-	"encoding/json"
 	"io"
 	"strings"
-	"time"
 
 	"go-avbot/types"
 
@@ -29,24 +27,16 @@ type Service struct {
 	csrfToken string
 	cookies   string
 	RoomID    string
-	nvr       *NVR
 }
 
 // Register makes sure that the given realm ID maps to a github realm.
 func (e *Service) Register(oldService types.Service, client *gomatrix.Client) error {
-	// Setup the NVR
-	e.nvr = NewNVR(
-		e.Host,
-		e.Port,
-		e.User,
-		e.Password)
-
 	// Start the NVR Livefeed
-	if err := e.nvr.Authenticate(); err != nil {
+	if err := e.Authenticate(); err != nil {
 		logrus.Fatal(err)
 	}
 
-	events, err := NewWebsocketEvent(e.nvr)
+	events, err := NewWebsocketEvent(e)
 	if err != nil {
 		panic(err)
 	}
@@ -56,13 +46,18 @@ func (e *Service) Register(oldService types.Service, client *gomatrix.Client) er
 			select {
 			case message := <-events.Events:
 				action, err := message.GetAction()
-				payload := message.Payload.GetRAWData()
 
 				if action.ModelKey == "event" {
-					var event Event
-					err := json.Unmarshal(payload, &event)
+					event := Event{}
+					err := message.Payload.GetJSON(&event)
 					if err != nil {
-						logrus.Warningf("Error during unmarshal %s", err)
+						logrus.Warningf("Error during unmarshal event %s", err)
+					}
+
+					smart := SmartDetectTypes{}
+					err = message.Payload.GetJSON(&smart)
+					if err != nil {
+						logrus.Warningf("Error during unmarshal smart %s", err)
 					}
 
 					if event.Type == "ring" {
@@ -81,65 +76,13 @@ func (e *Service) Register(oldService types.Service, client *gomatrix.Client) er
 						}
 					}
 
-					if event.Type == "smartDetectZone" {
-						go e.SmartDetect(strings.Join(event.SmartDetectTypes, ""), client, action)
+					if len(smart.SmartDetectTypes) > 0 {
+						if len(smart.Metadata.DetectedThumbnails) > 0 {
+							go e.SmartDetect(strings.Join(event.SmartDetectTypes, ""), client, action)
+						}
 					}
 
 				}
-
-				//				if action.Action == "update" && action.ModelKey == "event" && action.RecordModel == "camera" {
-				//					var smart SmartDetectTypes
-				//					json.Unmarshal(payload, &smart)
-				//
-				//					logrus.Info(action)
-				//					logrus.Info(string(payload))
-				//
-				//					if len(smart.SmartDetectTypes) == 0 {
-				//						continue
-				//					}
-				//
-				//					message := "Detect: " + strings.Join(smart.SmartDetectTypes, "")
-				//
-				//					msg := gomatrix.HTMLMessage{
-				//						Body:          message,
-				//						MsgType:       "m.notice",
-				//						Format:        "org.matrix.custom.html",
-				//						FormattedBody: util.MarkdownRender(message),
-				//					}
-				//
-				//					if _, err := client.SendMessageEvent(e.RoomID, "m.room.message", msg); err != nil {
-				//						logrus.WithField("room_id", e.RoomID).Error("Failed to send unifi_protect notification to room.")
-				//						continue
-				//					}
-				//
-				//					i := 0
-				//				retry:
-				//					var out io.ReadCloser
-				//					var length int64
-				//					url := "/proxy/protect/api/events/" + action.ID + "/thumbnail"
-				//					out, length, err = nvr.httpDoIO("GET", url)
-				//					if err != nil {
-				//						logrus.WithField("room_id", e.RoomID).Errorf("Could not get thumbnail of %s. Error: %s", url, err.Error())
-				//						if i <= 3 {
-				//							logrus.WithField("room_id", e.RoomID).Errorf("Retry authentication %d", i)
-				//							i += 1
-				//							goto retry
-				//						}
-				//						continue
-				//					}
-				//
-				//					rmu, err := client.UploadToContentRepo(out, "image/jpeg", length)
-				//					if err != nil {
-				//						logrus.WithField("room_id", e.RoomID).Error("Could not upload thumbnail.", err.Error())
-				//						continue
-				//					}
-				//					log.Info(rmu.ContentURI)
-				//
-				//					if _, err := client.SendImage(e.RoomID, "file"+action.ID+".jpg", rmu.ContentURI); err != nil {
-				//						logrus.WithField("room_id", e.RoomID).Error("Failed to send unifi_protect thumbnail to room.")
-				//					}
-				//
-				//				}
 
 				if err != nil {
 					logrus.Warningf("Skipping message due to err: %s", err)
@@ -153,6 +96,8 @@ func (e *Service) Register(oldService types.Service, client *gomatrix.Client) er
 }
 
 func (e *Service) SmartDetect(types string, client *gomatrix.Client, action *WsAction) {
+	//	time.Sleep( * time.Second)
+
 	message := "Detect: " + types
 
 	msg := gomatrix.HTMLMessage{
@@ -162,26 +107,17 @@ func (e *Service) SmartDetect(types string, client *gomatrix.Client, action *WsA
 		FormattedBody: util.MarkdownRender(message),
 	}
 
-	if _, err := client.SendMessageEvent(e.RoomID, "m.room.message", msg); err != nil {
-		logrus.WithField("room_id", e.RoomID).Error("Failed to send unifi_protect smartDetectZone notification to room.")
-		return
-	}
-
-	time.Sleep(5 * time.Second)
-
-	i := 0
-retry:
 	var out io.ReadCloser
 	var length int64
 	url := "/proxy/protect/api/events/" + action.ID + "/thumbnail"
-	out, length, err := e.nvr.httpDoIO("GET", url)
+	out, length, err := e.CallIO("GET", url)
 	if err != nil {
 		logrus.WithField("room_id", e.RoomID).Errorf("Could not get thumbnail of %s. Error: %s", url, err.Error())
-		if i <= 3 {
-			logrus.WithField("room_id", e.RoomID).Errorf("Retry authentication %d", i)
-			i += 1
-			goto retry
-		}
+		return
+	}
+
+	if _, err := client.SendMessageEvent(e.RoomID, "m.room.message", msg); err != nil {
+		logrus.WithField("room_id", e.RoomID).Error("Failed to send unifi_protect smartDetectZone notification to room.")
 		return
 	}
 
@@ -194,22 +130,6 @@ retry:
 
 	if _, err := client.SendImage(e.RoomID, "file"+action.ID+".jpg", rmu.ContentURI); err != nil {
 		logrus.WithField("room_id", e.RoomID).Error("Failed to send unifi_protect thumbnail to room.")
-	}
-}
-
-// Commands supported:
-//
-//	!unifi some message
-//
-// Responds with a notice of "some message".
-func (e *Service) Commands(cli *gomatrix.Client) []types.Command {
-	return []types.Command{
-		{
-			Path: []string{"unifi_protect"},
-			Command: func(roomID, userID string, args []string) (interface{}, error) {
-				return &gomatrix.TextMessage{MsgType: "m.notice", Body: strings.Join(args, " ")}, nil
-			},
-		},
 	}
 }
 

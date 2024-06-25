@@ -201,7 +201,7 @@ func setup(mux *http.ServeMux, matrixClient *http.Client) {
 
 func main() {
 
-	log.Infof("GO-AVBOT build %s (%s %s %s %s %s %s)", MinVersion, BindAddress, BaseURL, DatabaseType, DatabaseURL, ConfigFile)
+	log.Infof("GO-AVBOT build %s (%s %s %s %s %s)", MinVersion, BindAddress, BaseURL, DatabaseType, DatabaseURL, ConfigFile)
 
 	setup(http.DefaultServeMux, http.DefaultClient)
 	log.Fatal(http.ListenAndServe(BindAddress, nil))
