@@ -98,10 +98,8 @@ func (n *NVR) httpDo(method string, url string, body io.Reader, out interface{})
 		return err
 	}
 
-	if n.cookies != "" {
-		request.Header.Set("Cookie", n.cookies)
-		request.Header.Add("X-CSRF-Token", n.csrfToken)
-	}
+	request.Header.Set("Cookie", n.cookies)
+	request.Header.Add("X-CSRF-Token", n.csrfToken)
 
 	if body != nil {
 		request.Header.Add("Content-Type", "application/json")
@@ -123,6 +121,9 @@ func (n *NVR) httpDo(method string, url string, body io.Reader, out interface{})
 	}
 
 	if resp.StatusCode == 401 {
+		if err := n.Authenticate(); err != nil {
+			return fmt.Errorf("reauthentication error %s", err.Error())
+		}
 		return ErrUnauthorized
 	}
 
@@ -146,10 +147,8 @@ func (n *NVR) httpDoIO(method string, url string) (io.ReadCloser, int64, error) 
 		return nil, 0, err
 	}
 
-	if n.cookies != "" {
-		request.Header.Set("Cookie", n.cookies)
-		request.Header.Add("X-CSRF-Token", n.csrfToken)
-	}
+	request.Header.Set("Cookie", n.cookies)
+	request.Header.Add("X-CSRF-Token", n.csrfToken)
 
 	transport := &http.Transport{
 		TLSClientConfig: &tls.Config{
@@ -167,12 +166,18 @@ func (n *NVR) httpDoIO(method string, url string) (io.ReadCloser, int64, error) 
 	}
 
 	if resp.StatusCode == 401 {
+		if err := n.Authenticate(); err != nil {
+			return nil, 0, fmt.Errorf("reauthentication error %s", err.Error())
+		}
 		return nil, 0, ErrUnauthorized
 	}
 
 	if resp.StatusCode/100 != 2 {
 		return nil, 0, fmt.Errorf("invalid return code %d", resp.StatusCode)
 	}
+
+	n.csrfToken = resp.Header.Get("X-CSRF-Token")
+	n.cookies = resp.Header.Get("Set-Cookie")
 
 	return resp.Body, resp.ContentLength, nil
 }

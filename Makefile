@@ -3,10 +3,11 @@
 #vars
 IMAGENAME=go-avbot
 TAG=v0.0.7
-BUILDDATE=${shell date -u +%Y-%m-%dT%H:%M:%SZ}
+BRANCH=$(shell git symbolic-ref --short HEAD | xargs basename)
+BRANCHSHORT=$(shell echo ${BRANCH} | awk -F. '{ print $1"."$2 }')
 IMAGEFULLNAME=avhost/${IMAGENAME}
-BRANCH=${shell git symbolic-ref --short HEAD}
 LASTCOMMIT=$(shell git log -1 --pretty=short | tail -n 1 | tr -d " " | tr -d "UPDATE:")
+BUILDDATE=${shell date -u +%Y%m%dT%H%M%SZ}
 
 .PHONY: help build bootstrap all docs publish push version
 
@@ -27,12 +28,7 @@ help:
 
 ifeq (${BRANCH}, master) 
         BRANCH=latest
-endif
-
-ifneq ($(shell echo $(LASTCOMMIT) | grep -E '^v([0-9]+\.){0,2}(\*|[0-9]+)'),)
-        BRANCH=${LASTCOMMIT}
-else
-        BRANCH=latest
+        BRANCHSHORT=latest
 endif
 
 build:
@@ -44,10 +40,8 @@ build-bin:
 	@CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags "-X main.BuildVersion=${BUILDDATE} -X main.GitVersion=${TAG} -extldflags \"-static\"" .
 
 push:
-	@echo ">>>> Publish docker image: " ${BRANCH}
-	@docker buildx create --use --name buildkit
-	@docker buildx build --platform linux/arm64,linux/amd64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:${BRANCH} .
-	@docker buildx rm buildkit
+	@echo ">>>> Publish docker image: " ${BRANCH} ${BUILDDATE}
+	@docker buildx build --push --platform linux/amd64 --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:${BRANCH} .
 
 update-gomod:
 	go get -u

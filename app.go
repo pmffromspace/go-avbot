@@ -6,7 +6,6 @@ import (
 	"net/http"
 	_ "net/http/pprof"
 	"os"
-	"path/filepath"
 
 	_ "go-avbot/realms/github"
 	_ "go-avbot/services/echo"
@@ -23,7 +22,6 @@ import (
 	"go-avbot/database"
 	"go-avbot/polling"
 
-	"github.com/matrix-org/dugong"
 	_ "github.com/mattn/go-sqlite3"
 	log "github.com/sirupsen/logrus"
 	yaml "gopkg.in/yaml.v2"
@@ -43,9 +41,6 @@ var BaseURL string
 
 // ConfigFile is the bots config file in yaml format
 var ConfigFile string
-
-// LogDir is the directory where the bot will log in
-var LogDir string
 
 // MinVersion is the BuildVersion Number
 var MinVersion string
@@ -206,19 +201,7 @@ func setup(mux *http.ServeMux, matrixClient *http.Client) {
 
 func main() {
 
-	if LogDir != "" {
-		log.AddHook(dugong.NewFSHook(
-			filepath.Join(LogDir, "avbot.log"),
-			&log.TextFormatter{
-				TimestampFormat:  "2006-01-02 15:04:05.000000",
-				DisableColors:    true,
-				DisableTimestamp: false,
-				DisableSorting:   false,
-			}, &dugong.DailyRotationSchedule{GZip: false},
-		))
-	}
-
-	log.Infof("GO-AVBOT build %s (%s %s %s %s %s %s)", MinVersion, BindAddress, BaseURL, DatabaseType, DatabaseURL, LogDir, ConfigFile)
+	log.Infof("GO-AVBOT build %s (%s %s %s %s %s %s)", MinVersion, BindAddress, BaseURL, DatabaseType, DatabaseURL, ConfigFile)
 
 	setup(http.DefaultServeMux, http.DefaultClient)
 	log.Fatal(http.ListenAndServe(BindAddress, nil))
