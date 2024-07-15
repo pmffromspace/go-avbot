@@ -11,8 +11,8 @@ import (
 	"go-avbot/database"
 	"go-avbot/types"
 
-	util "github.com/AVENTER-UG/util"
-	"github.com/matrix-org/gomatrix"
+	util "github.com/AVENTER-UG/util/util"
+	"github.com/AVENTER-UG/gomatrix"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -33,16 +33,17 @@ var httpClient = &http.Client{}
 // Notices will be sent as the service user ID.
 //
 // Example JSON request:
-//   {
-//       rooms: {
-//           "!ewfug483gsfe:localhost": {
-//               repos: {
-//                   "1" {
-//                   }
-//               }
-//           }
-//       }
-//   }
+//
+//	{
+//	    rooms: {
+//	        "!ewfug483gsfe:localhost": {
+//	            repos: {
+//	                "1" {
+//	                }
+//	            }
+//	        }
+//	    }
+//	}
 type Service struct {
 	types.DefaultService
 	webhookEndpointURL string
@@ -143,9 +144,10 @@ func outputForTemplate(giteaTmpl string, tmpl map[string]string) (out string) {
 //
 // Go-AVBOT cannot register with gitea for webhooks automatically. The user must manually add the
 // webhook endpoint URL to their .gitea.yml file:
-//    notifications:
-//        webhooks: http://go-avbot-endpoint.com/gitea_webhook_service
-// 	Gitea webhook definition: https://docs.gitea.io/en-us/webhooks/
+//
+//	   notifications:
+//	       webhooks: http://go-avbot-endpoint.com/gitea_webhook_service
+//		Gitea webhook definition: https://docs.gitea.io/en-us/webhooks/
 func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *gomatrix.Client) {
 	if err := req.ParseForm(); err != nil {
 		log.WithError(err).Error("Failed to read incoming Gitea webhook form")

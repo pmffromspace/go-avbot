@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/matrix-org/gomatrix"
+	"github.com/AVENTER-UG/gomatrix"
 )
 
 // BotOptions for a given bot user in a given room

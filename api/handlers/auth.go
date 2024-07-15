@@ -12,7 +12,7 @@ import (
 	"go-avbot/metrics"
 	"go-avbot/types"
 
-	"git.aventer.biz/AVENTER/util"
+	"github.com/AVENTER-UG/util/util"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -31,19 +31,22 @@ type RequestAuthSession struct {
 // For the format of the response, see the specific AuthRealm that the Realm ID corresponds to.
 //
 // Request:
-//  POST /admin/requestAuthSession
-//  {
-//      "RealmID": "github_realm_id",
-//      "UserID": "@my_user:localhost",
-//      "Config": {
-//          // AuthRealm specific config info
-//      }
-//  }
+//
+//	POST /admin/requestAuthSession
+//	{
+//	    "RealmID": "github_realm_id",
+//	    "UserID": "@my_user:localhost",
+//	    "Config": {
+//	        // AuthRealm specific config info
+//	    }
+//	}
+//
 // Response:
-//  HTTP/1.1 200 OK
-//  {
-//      // AuthRealm-specific information
-//  }
+//
+//	HTTP/1.1 200 OK
+//	{
+//	    // AuthRealm-specific information
+//	}
 func (h *RequestAuthSession) OnIncomingRequest(req *http.Request) util.JSONResponse {
 	logger := util.GetLogger(req.Context())
 	if req.Method != "POST" {
@@ -93,14 +96,17 @@ type RemoveAuthSession struct {
 // The JSON object MUST contain the keys "RealmID" and "UserID" to identify the session to remove.
 //
 // Request
-//  POST /admin/removeAuthSession
-//  {
-//      "RealmID": "github-realm",
-//      "UserID": "@my_user:localhost"
-//  }
+//
+//	POST /admin/removeAuthSession
+//	{
+//	    "RealmID": "github-realm",
+//	    "UserID": "@my_user:localhost"
+//	}
+//
 // Response:
-//  HTTP/1.1 200 OK
-//  {}
+//
+//	HTTP/1.1 200 OK
+//	{}
 func (h *RemoveAuthSession) OnIncomingRequest(req *http.Request) util.JSONResponse {
 	logger := util.GetLogger(req.Context())
 	if req.Method != "POST" {
@@ -182,26 +188,29 @@ type ConfigureAuthRealm struct {
 // provided is of type "api.ConfigureAuthRealmRequest".
 //
 // Request:
-//  POST /admin/configureAuthRealm
-//  {
-//      "ID": "my-realm-id",
-//      "Type": "github",
-//      "Config": {
-//          // Realm-specific configuration information
-//      }
-//  }
+//
+//	POST /admin/configureAuthRealm
+//	{
+//	    "ID": "my-realm-id",
+//	    "Type": "github",
+//	    "Config": {
+//	        // Realm-specific configuration information
+//	    }
+//	}
+//
 // Response:
-//  HTTP/1.1 200 OK
-//  {
-//      "ID": "my-realm-id",
-//      "Type": "github",
-//      "OldConfig": {
-//          // Old auth realm config information
-//      },
-//      "NewConfig": {
-//          // New auth realm config information
-//      },
-//  }
+//
+//	HTTP/1.1 200 OK
+//	{
+//	    "ID": "my-realm-id",
+//	    "Type": "github",
+//	    "OldConfig": {
+//	        // Old auth realm config information
+//	    },
+//	    "NewConfig": {
+//	        // New auth realm config information
+//	    },
+//	}
 func (h *ConfigureAuthRealm) OnIncomingRequest(req *http.Request) util.JSONResponse {
 	logger := util.GetLogger(req.Context())
 	if req.Method != "POST" {
@@ -254,25 +263,30 @@ type GetSession struct {
 // a 200 OK is still returned with "Authenticated" set to false.
 //
 // Request:
-//  POST /admin/getSession
-//  {
-//      "RealmID": "my-realm",
-//      "UserID": "@my_user:localhost"
-//  }
+//
+//	POST /admin/getSession
+//	{
+//	    "RealmID": "my-realm",
+//	    "UserID": "@my_user:localhost"
+//	}
+//
 // Response:
-//  HTTP/1.1 200 OK
-//  {
-//      "ID": "session_id",
-//      "Authenticated": true,
-//      "Info": {
-//          // Session-specific config info
-//      }
-//  }
+//
+//	HTTP/1.1 200 OK
+//	{
+//	    "ID": "session_id",
+//	    "Authenticated": true,
+//	    "Info": {
+//	        // Session-specific config info
+//	    }
+//	}
+//
 // Response if session not found:
-//  HTTP/1.1 200 OK
-//  {
-//      "Authenticated": false
-//  }
+//
+//	HTTP/1.1 200 OK
+//	{
+//	    "Authenticated": false
+//	}
 func (h *GetSession) OnIncomingRequest(req *http.Request) util.JSONResponse {
 	logger := util.GetLogger(req.Context())
 	if req.Method != "POST" {

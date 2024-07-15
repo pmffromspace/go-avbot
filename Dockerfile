@@ -1,37 +1,37 @@
-FROM golang:alpine as builder
+FROM golang:1.21.0-alpine AS builder
 
 WORKDIR /build
 
+ARG BUILDDATE ""
+
 COPY . /build/
 
-RUN apk add git gcc musl-dev && \
+RUN apk add --update git gcc musl-dev && \
     go get -d
 
-RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -ldflags "-X main.MinVersion=`date -u +%Y%m%d%.H%M%S` -extldflags \"-static\"" -o main app.go init.go
+RUN CGO_CFLAGS="-D_LARGEFILE64_SOURCE -g -O2 -Wno-return-local-addr" CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -ldflags "-X main.MinVersion=${BUILDDATE} -extldflags \"-static\"" -o main .
 
-
-FROM alpine
+FROM alpine:3.19
 LABEL maintainer="Andreas Peters <support@aventer.biz>"
+LABEL org.opencontainers.image.title="go-avbot"
+LABEL org.opencontainers.image.description="Matrix Bot"
+LABEL org.opencontainers.image.vendor="AVENTER UG (haftungsbeschränkt)"
+LABEL org.opencontainers.image.source="https://github.com/AVENTER-UG/"
+
 
 ENV BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=/go-avbot/data/go-neb.db?_busy_timeout=5000 
 
-
-RUN adduser -S -D -H -h /go-avbot appuser && \
-    mkdir /go-avbot && \
-    chown appuser: /go-avbot && \
-    chmod 755 /go-avbot
-
+RUN apk add --no-cache ca-certificates
+RUN adduser -S -D -H -h /app appuser
 USER appuser
 
-WORKDIR "/go-avbot"
+COPY --from=builder /build/main /app/
 
-COPY --from=builder /build/main /go-avbot/
-COPY run.sh /run.sh
+EXPOSE 10000
 
-RUN mkdir -p /go-avbot/log
+WORKDIR "/app"
 
-VOLUME /go-avbot/data
+CMD ["./main"]
 
 EXPOSE 4050
 
-ENTRYPOINT ["/run.sh"]
