@@ -27,15 +27,6 @@ clients:
     DisplayName: "Go-AVBOT!"
 
 
-# The list of realms which go-avbotis aware of.
-# Delete or modify this list as appropriate.
-# See the docs for /configureAuthRealm for the full list of options:
-# https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/index.html#ConfigureAuthRealmRequest
-realms:
-  - ID: "github_realm"
-    Type: "github"
-    Config: {} # No need for client ID or Secret as go-avbotisn't generating OAuth URLs
-
 # The list of *authenticated* sessions which go-avbotis aware of.
 # Delete or modify this list as appropriate.
 # The full list of options are shown below: there is no single HTTP endpoint
@@ -61,12 +52,6 @@ services:
     Type: "echo"
     UserID: "@goavbot:localhost"
     Config:
-
-  - ID: "invoice_cmd_service"
-    Type: "invoice"
-    UserID: "@goavbot:localhost"
-    Config:
-      AllowedUsers: "@YOUR_USER_ID:localhost,@ANOTHER_USER_ID:localhost"
 
   - ID: "pentest_cmd_service"
     Type: "pentest"
@@ -94,49 +79,5 @@ services:
           AccessToken: "YOUR_AWS_TOKEN (OPTIONAL)"
           Region: "us-west-2"          
 
-  - ID: "github_cmd_service"
-    Type: "github"
-    UserID: "@goavbot:localhost" # requires a Syncing client
-    Config:
-      RealmID: "github_realm"
-
-    # Make sure your BASE_URL can be accessed by Github!
-  - ID: "github_webhook_service"
-    Type: "github-webhook"
-    UserID: "@another_goavbot:localhost"
-    Config:
-      RealmID: "github_realm"
-      ClientUserID: "@YOUR_USER_ID:localhost" # needs to be an authenticated user so go-avbotcan create webhooks.
-      Rooms:
-        "!someroom:id":
-          Repos:
-            "matrix-org/synapse":
-              Events: ["push", "issues"]
-            "matrix-org/dendron":
-              Events: ["pull_request"]
-        "!anotherroom:id":
-          Repos:
-            "matrix-org/synapse":
-              Events: ["push", "issues"]
-            "matrix-org/dendron":
-              Events: ["pull_request"]              
-
- - ID: "travis_webhook_service"
-    Type: "wekan"
-    UserID: "@another_goavbot:localhost"
-    Config:
-      Rooms:
-        "!someroom:id":
-          Boards:
-            "1":
-              template: ""
-            "2":
-              template: ""
-        "!someroom:id":
-          Boards:
-            "3":
-              template: ""
-            "5":
-              template: ""
             
             

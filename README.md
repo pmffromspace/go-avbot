@@ -1,8 +1,6 @@
 # go-avbot - the aventer bot
 
-## What is go-avbot
-
-AVBOT is our digital working partner. He is helping us with our daily business. From creating and sending out invoices to install server applications. AVBOT is based on [go-neb](https://github.com/matrix-org/go-neb), a matrix BOT developed in golang.
+AVBOT is a bot for the Matrix Chat System.
 
 
 ## How to use it?
@@ -30,26 +28,12 @@ go-neb is under the Apache License. To make it more complicated, our code are un
 - Create Instances
 - Search AMI's
 
-### Ispconfig
-
-- Create Invoice and send them out
-- Show invoices of a user
-
 ### Pentest
 
 - Penetrate a server target
 - Create a report about the penetrations test result and upload it into the chat room
 
 There are still a lot of work. Currently our main focus is the AWS support.
-
-### Github
-
-- Receive Webhooks from your github repositories.
-- Create Issues
-
-### Travis-CI
-
-- Receive Webhooks from your travis account
 
 ### Wekan
 
@@ -59,27 +43,9 @@ There are still a lot of work. Currently our main focus is the AWS support.
 
 - Receive Webhooks from your gitea repo
 
-### NLP (Natural Language Processing) 
+### Unifi Protect
 
-- Gateway to the IKY Framework
-
-## Software Requirements
-
-```bash
-go get github.com/sirupsen/logrus
-go get github.com/matrix-org/util
-go get github.com/mattn/go-sqlite3
-go get github.com/prometheus/client_golang/prometheus
-go get github.com/matrix-org/dugong
-go get git.aventer.biz/AVENTER/gomatrix
-go get github.com/mattn/go-shellwords
-go get gopkg.in/yaml.v2
-go get golang.org/x/oauth2
-go get github.com/google/go-github/github
-go get gopkg.in/alecthomas/kingpin.v2
-go get github.com/russross/blackfriday
-go get github.com/aws/aws-sdk-go
-```
+- Receive events from Unifi Protect devices
 
 ## API Documentation
 

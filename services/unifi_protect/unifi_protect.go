@@ -78,7 +78,7 @@ func (e *Service) Register(oldService types.Service, client *gomatrix.Client) er
 
 					if len(smart.SmartDetectTypes) > 0 {
 						if len(smart.Metadata.DetectedThumbnails) > 0 {
-							go e.SmartDetect(strings.Join(event.SmartDetectTypes, ""), client, action)
+							go e.SmartDetect(strings.Join(event.SmartDetectTypes, " "), client, action)
 						}
 					}
 

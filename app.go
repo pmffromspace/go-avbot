@@ -7,12 +7,9 @@ import (
 	_ "net/http/pprof"
 	"os"
 
-	_ "go-avbot/realms/github"
 	_ "go-avbot/services/echo"
 	_ "go-avbot/services/gitea"
-	_ "go-avbot/services/invoice"
 	_ "go-avbot/services/pentest"
-	_ "go-avbot/services/travisci"
 	_ "go-avbot/services/unifi_protect"
 	_ "go-avbot/services/wekan"
 	"go-avbot/types"
