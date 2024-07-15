@@ -2,7 +2,7 @@
 
 #vars
 IMAGENAME=go-avbot
-TAG=v0.0.7
+TAG=v0.2.0
 BRANCH=$(shell git symbolic-ref --short HEAD | xargs basename)
 BRANCHSHORT=$(shell echo ${BRANCH} | awk -F. '{ print $1"."$2 }')
 IMAGEFULLNAME=avhost/${IMAGENAME}
