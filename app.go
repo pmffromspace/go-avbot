@@ -9,6 +9,7 @@ import (
 
 	_ "go-avbot/services/echo"
 	_ "go-avbot/services/gitea"
+	_ "go-avbot/services/ollama"
 	_ "go-avbot/services/pentest"
 	_ "go-avbot/services/unifi_protect"
 	_ "go-avbot/services/wekan"
