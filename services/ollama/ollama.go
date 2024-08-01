@@ -66,7 +66,7 @@ func (e *Service) Commands(cli *gomatrix.Client) []types.Command {
 }
 
 func (e *Service) chat(cli *gomatrix.Client, roomID, message string) {
-	cli.UserTyping(roomID, true, 100000)
+	cli.UserTyping(roomID, true, 900000)
 
 	req := &api.GenerateRequest{
 		Model:   e.Model,
@@ -76,8 +76,9 @@ func (e *Service) chat(cli *gomatrix.Client, roomID, message string) {
 	}
 
 	respFunc := func(resp api.GenerateResponse) error {
-		if len(ollamaContext[roomID]) > e.ContextSize {
-			ollamaContext[roomID] = []int{}
+		if len(ollamaContext[roomID]) >= e.ContextSize {
+			// keep only the last 100 items
+			ollamaContext[roomID] = ollamaContext[roomID][len(ollamaContext[roomID])-100:]
 		}
 		ollamaContext[roomID] = append(ollamaContext[roomID], resp.Context...)
 
