@@ -2,7 +2,7 @@
 
 #vars
 IMAGENAME=go-avbot
-TAG=v0.2.0
+TAG=v0.3.0
 BRANCH=$(shell git symbolic-ref --short HEAD | xargs basename)
 BRANCHSHORT=$(shell echo ${BRANCH} | awk -F. '{ print $1"."$2 }')
 IMAGEFULLNAME=avhost/${IMAGENAME}
@@ -26,7 +26,7 @@ help:
 
 .DEFAULT_GOAL := all
 
-ifeq (${BRANCH}, master) 
+ifeq (${BRANCH}, master)
         BRANCH=latest
         BRANCHSHORT=latest
 endif
@@ -45,7 +45,7 @@ push:
 
 update-gomod:
 	go get -u
-	go mod tidy	
+	go mod tidy
 	go mod vendor
 
 seccheck:
