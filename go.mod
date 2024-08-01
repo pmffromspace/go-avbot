@@ -1,6 +1,8 @@
 module go-avbot
 
-go 1.22
+go 1.22.0
+
+toolchain go1.22.5
 
 require (
 	github.com/AVENTER-UG/gomatrix v0.5.1-0.20240622160454-816d89326441
@@ -11,6 +13,7 @@ require (
 	github.com/matrix-org/dugong v0.0.0-20210921133753-66e6b1c67e2e
 	github.com/mattn/go-shellwords v1.0.12
 	github.com/mattn/go-sqlite3 v1.14.22
+	github.com/ollama/ollama v0.3.2
 	github.com/prometheus/client_golang v1.19.1
 	github.com/russross/blackfriday v1.6.0
 	github.com/sirupsen/logrus v1.9.3

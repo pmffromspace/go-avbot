@@ -47,7 +47,7 @@ sessions:
 # See the docs for /configureService for the full list of options:
 # https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/index.html#ConfigureServiceRequest
 services:
-  
+
   - ID: "echo_cmd_service"
     Type: "echo"
     UserID: "@goavbot:localhost"
@@ -59,9 +59,9 @@ services:
     Config:
       OpenVASIP: "127.0.0.1"
       OpenVASPort: "9390"
-      OpenVASUsername: "admin"      
-      OpenVASPassword: "admin"         
-      AllowedUsers: "@YOUR_USER_ID:localhost,@ANOTHER_USER_ID:localhost"      
+      OpenVASUsername: "admin"
+      OpenVASPassword: "admin"
+      AllowedUsers: "@YOUR_USER_ID:localhost,@ANOTHER_USER_ID:localhost"
 
   - ID: aws_cmd_service"
     Type: "aws"
@@ -70,14 +70,30 @@ services:
       Users:
         "@YOUR_USER_ID:localhost":
           AccessKey: "YOUR_AWS_ACCESS_KEY"
-          SecretAccessKey: "YOUR_AWS_SECRET_ACCESS_KEY"    
+          SecretAccessKey: "YOUR_AWS_SECRET_ACCESS_KEY"
           AccessToken: "YOUR_AWS_TOKEN (OPTIONAL)"
           Region: "us-west-2"
         "@ANOTHER_USER_ID:localhost":
           AccessKey: "YOUR_AWS_ACCESS_KEY"
-          SecretAccessKey: "YOUR_AWS_SECRET_ACCESS_KEY"    
+          SecretAccessKey: "YOUR_AWS_SECRET_ACCESS_KEY"
           AccessToken: "YOUR_AWS_TOKEN (OPTIONAL)"
-          Region: "us-west-2"          
+          Region: "us-west-2"
 
-            
-            
+  - ID: "ollama"
+    Type: "ollama"
+    UserID: "@goavbot:localhost"
+    Config:
+      Host: 127.0.0.1
+      Port: 11434
+      model: "gemma2:latest"
+      contextSize: 8192 #ollama show gemma2
+
+  - ID: "unifi_protect_Service"
+    Type: "unifi_protect"
+    UserID: "@goavbot:localhost"
+    Config:
+      RoomID: "<ROOM_ID_OF_YOUR_UNIFI_EVENT_ROOMT>"
+      User: <UNIFI_CLOUDKEY_USERNAME>
+      Password: <UNIFI_CLOUDKEY_PASSWORD>
+      Host: <UNIFI_CLOUDKEY_IP>
+      Port: 443

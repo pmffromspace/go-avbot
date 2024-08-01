@@ -16,7 +16,7 @@ import (
 // ServiceType of the Unifi service
 const ServiceType = "unifi_protect"
 
-// Service represents the Echo service. It has no Config fields.
+// Service represents the unifi_protext service. It has no Config fields.
 type Service struct {
 	types.DefaultService
 	connected bool
@@ -29,7 +29,6 @@ type Service struct {
 	RoomID    string
 }
 
-// Register makes sure that the given realm ID maps to a github realm.
 func (e *Service) Register(oldService types.Service, client *gomatrix.Client) error {
 	// Start the NVR Livefeed
 	if err := e.Authenticate(); err != nil {
