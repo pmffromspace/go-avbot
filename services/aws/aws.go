@@ -11,8 +11,8 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/aws/aws-sdk-go/aws"
 	"github.com/AVENTER-UG/gomatrix"
+	"github.com/aws/aws-sdk-go/aws"
 )
 
 // ServiceType of the AWS service
@@ -37,7 +37,8 @@ type Service struct {
 }
 
 // Commands supported:
-//    !aws help
+//
+//	!aws help
 func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 	return []types.Command{
 		{
@@ -53,7 +54,7 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 				message = message + fmt.Sprintf("image search\n==============\n \t store : [marketplace|amazon|microsoft|all] where so search\n\t name : query string to search a image (case sensitive) \n\n")
 				message = message + fmt.Sprintf("```\n")
 
-				return &gomatrix.HTMLMessage{message, "m.text", "org.matrix.custom.html", markdownRender(message)}, nil
+				return &gomatrix.HTMLMessage{Body: message, MsgType: "m.text", Format: "org.matrix.custom.html", FormattedBody: markdownRender(message)}, nil
 			},
 		},
 		{
@@ -113,12 +114,12 @@ func (s *Service) cmdAwsImageSearch(roomID, userID, ownerAlias string, args []st
 	log.Info("Service: Aws: Show Images")
 
 	if len(args) < 2 {
-		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf(`Missing parameters. Have a look with !invoice help`)}, nil
+		return &gomatrix.TextMessage{MsgType: "m.notice", Body: fmt.Sprintf(`Missing parameters. Have a look with !invoice help`)}, nil
 	}
 
 	searchString := strings.Replace(args[0], "*", "", -1)
 	if len(searchString) < 4 {
-		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf(`Your search string is to short my friend!`)}, nil
+		return &gomatrix.TextMessage{MsgType: "m.notice", Body: fmt.Sprintf(`Your search string is to short my friend!`)}, nil
 	}
 
 	// Have to login first
@@ -163,7 +164,7 @@ func (s *Service) cmdAwsImageSearch(roomID, userID, ownerAlias string, args []st
 		}
 		images, err := ec.DescribeImages(input)
 		if err != nil {
-			return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("Didnt go a list of instances: %s", err)}, nil
+			return &gomatrix.TextMessage{MsgType: "m.notice", Body: fmt.Sprintf("Didnt go a list of instances: %s", err)}, nil
 		}
 
 		// Well, now we have all images in a nice structure, so print them out
@@ -198,9 +199,9 @@ func (s *Service) cmdAwsImageSearch(roomID, userID, ownerAlias string, args []st
 			message = message + fmt.Sprintf("\n")
 		}
 
-		return &gomatrix.HTMLMessage{message, "m.text", "org.matrix.custom.html", markdownRender(message)}, nil
+		return &gomatrix.HTMLMessage{Body: message, MsgType: "m.text", Format: "org.matrix.custom.html", FormattedBody: markdownRender(message)}, nil
 	}
-	return &gomatrix.TextMessage{"m.notice", "Cannot login into aws"}, nil
+	return &gomatrix.TextMessage{MsgType: "m.notice", Body: "Cannot login into aws"}, nil
 }
 
 func init() {

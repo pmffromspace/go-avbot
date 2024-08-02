@@ -20,7 +20,7 @@ func (s *Service) cmdAwsInstanceRun(roomID, userID string, args []string) (inter
 	//sshKeyName := args[2]
 
 	if len(args) < 1 {
-		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf(`Missing parameters. Have a look with !invoice help`)}, nil
+		return &gomatrix.TextMessage{MsgType: "m.notice", Body: fmt.Sprintf(`Missing parameters. Have a look with !invoice help`)}, nil
 	}
 
 	// Have to login first
@@ -49,17 +49,17 @@ func (s *Service) cmdAwsInstanceRun(roomID, userID string, args []string) (inter
 
 		if err != nil {
 			log.Info(instances)
-			return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("There is sth wrong. %s", err)}, nil
+			return &gomatrix.TextMessage{MsgType: "m.notice", Body: fmt.Sprintf("There is sth wrong. %s", err)}, nil
 		}
 
 	}
-	return &gomatrix.TextMessage{"m.notice", "Cannot login into aws"}, nil
+	return &gomatrix.TextMessage{MsgType: "m.notice", Body: "Cannot login into aws"}, nil
 }
 
 // Stop the aws instance
 func (s *Service) cmdAwsInstanceStop(roomID, userID string, args []string) (interface{}, error) {
 	if len(args) < 1 {
-		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf(`Missing parameters. Have a look with !invoice help"`)}, nil
+		return &gomatrix.TextMessage{MsgType: "m.notice", Body: fmt.Sprintf(`Missing parameters. Have a look with !invoice help"`)}, nil
 	}
 
 	instanceId := args[0]
@@ -88,19 +88,19 @@ func (s *Service) cmdAwsInstanceStop(roomID, userID string, args []string) (inte
 
 		if err != nil {
 			log.Info(instances)
-			return &gomatrix.TextMessage{"m.notice", "Dont know whats wrong. But I cannot stop the instance."}, nil
+			return &gomatrix.TextMessage{MsgType: "m.notice", Body: "Dont know whats wrong. But I cannot stop the instance."}, nil
 		}
 
-		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("Instance is down")}, nil
+		return &gomatrix.TextMessage{MsgType: "m.notice", Body: fmt.Sprintf("Instance is down")}, nil
 	}
 
-	return &gomatrix.TextMessage{"m.notice", "Cannot login into aws"}, nil
+	return &gomatrix.TextMessage{MsgType: "m.notice", Body: "Cannot login into aws"}, nil
 }
 
 // Start the aws instance
 func (s *Service) cmdAwsInstanceStart(roomID, userID string, args []string) (interface{}, error) {
 	if len(args) < 1 {
-		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf(`Missing parameters. Have a look with !invoice help"`)}, nil
+		return &gomatrix.TextMessage{MsgType: "m.notice", Body: fmt.Sprintf(`Missing parameters. Have a look with !invoice help"`)}, nil
 	}
 
 	instanceId := args[0]
@@ -129,13 +129,13 @@ func (s *Service) cmdAwsInstanceStart(roomID, userID string, args []string) (int
 		instances, err := ec.StartInstances(input)
 
 		if err != nil && instances != nil {
-			return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("Dont know whats wrong. But I cannot start the instance. %s", err)}, nil
+			return &gomatrix.TextMessage{MsgType: "m.notice", Body: fmt.Sprintf("Dont know whats wrong. But I cannot start the instance. %s", err)}, nil
 		}
 
-		return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("Instance is running")}, nil
+		return &gomatrix.TextMessage{MsgType: "m.notice", Body: fmt.Sprintf("Instance is running")}, nil
 	}
 
-	return &gomatrix.TextMessage{"m.notice", "Cannot login into aws"}, nil
+	return &gomatrix.TextMessage{MsgType: "m.notice", Body: "Cannot login into aws"}, nil
 }
 
 // Wrapper function to get all instances of every region
@@ -168,20 +168,20 @@ func (s *Service) cmdAwsInstanceShow(roomID, userID string, args []string) (inte
 			ec := ec2.New(sess)
 			instances, err := ec.DescribeInstances(nil)
 			if err != nil {
-				return &gomatrix.TextMessage{"m.notice", fmt.Sprintf("Didnt got a list of instances: %s %d", err, v)}, nil
+				return &gomatrix.TextMessage{MsgType: "m.notice", Body: fmt.Sprintf("Didnt got a list of instances: %s %d", err, v)}, nil
 			}
 
-			message = message + s.cmdAwsInstanceShowRegion(roomID, userID, b, instances)
+			message = message + s.cmdAwsInstanceShowRegion(b, instances)
 		} else {
-			return &gomatrix.TextMessage{"m.notice", "Cannot login into aws"}, nil
+			return &gomatrix.TextMessage{MsgType: "m.notice", Body: "Cannot login into aws"}, nil
 		}
 	}
 	message = message + fmt.Sprintf("\n```\n")
-	return &gomatrix.HTMLMessage{message, "m.text", "org.matrix.custom.html", markdownRender(message)}, nil
+	return &gomatrix.HTMLMessage{Body: message, MsgType: "m.text", Format: "org.matrix.custom.html", FormattedBody: markdownRender(message)}, nil
 }
 
 // Give me a list of all instances from a region
-func (s *Service) cmdAwsInstanceShowRegion(roomID, userID, region string, instances *ec2.DescribeInstancesOutput) string {
+func (s *Service) cmdAwsInstanceShowRegion(region string, instances *ec2.DescribeInstancesOutput) string {
 	log.Info("Service: Aws: Show Instance of Region: ", region)
 
 	var message string
