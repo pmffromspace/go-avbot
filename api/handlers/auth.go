@@ -54,7 +54,7 @@ func (h *RequestAuthSession) OnIncomingRequest(req *http.Request) util.JSONRespo
 	}
 	var body api.RequestAuthSessionRequest
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-		return util.MessageResponse(400, errorParsingResponseJson)
+		return util.MessageResponse(400, "Error parsing request JSON")
 	}
 	logger.WithFields(log.Fields{
 		"realm_id": body.RealmID,
