@@ -17,6 +17,7 @@ import (
 
 	"github.com/AVENTER-UG/gomatrix"
 	shellwords "github.com/mattn/go-shellwords"
+	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -217,8 +218,7 @@ func (c *Clients) onMessageEvent(client *gomatrix.Client, event *gomatrix.Event)
 					"room_id":    event.RoomID,
 					"user_id":    event.Sender,
 					"content":    content,
-				}).Print("Failed to send command response")
-				fmt.Printf("%+v\n", content)
+				}).Errorf("Failed to send command response %+v", content)
 			}
 		}
 	}
@@ -344,6 +344,7 @@ func (c *Clients) onRoomMemberEvent(client *gomatrix.Client, event *gomatrix.Eve
 }
 
 func (c *Clients) newClient(config api.ClientConfig) (*gomatrix.Client, error) {
+reconnect:
 	client, err := gomatrix.NewClient(config.HomeserverURL, config.UserID, config.AccessToken)
 	if err != nil {
 		return nil, err
@@ -357,9 +358,6 @@ func (c *Clients) newClient(config api.ClientConfig) (*gomatrix.Client, error) {
 	}
 	client.Store = nebStore
 	syncer.Store = nebStore
-
-	// TODO: Check that the access token is valid for the userID by peforming
-	// a request against the server.
 
 	syncer.OnEventType("m.room.message", func(event *gomatrix.Event) {
 		c.onMessageEvent(client, event)
@@ -383,7 +381,13 @@ func (c *Clients) newClient(config api.ClientConfig) (*gomatrix.Client, error) {
 	}).Info("Created new client")
 
 	a, _ := client.WhoAmI()
-	fmt.Println(a)
+	logrus.Trace("WhoAmI: ", a)
+	// if userID is empty, try to reconnect
+	if a.UserID == "" {
+		logrus.Error("Error during connection to matrix. UserID is empty. Try reconnect.")
+		time.Sleep(60 * time.Second)
+		goto reconnect
+	}
 
 	if config.Sync {
 		go func() {
