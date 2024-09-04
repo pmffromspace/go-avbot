@@ -16,10 +16,12 @@ import (
 	"go-avbot/types"
 
 	"go-avbot/api"
+	"go-avbot/api/handlers"
 	"go-avbot/clients"
 	"go-avbot/database"
 	"go-avbot/polling"
 
+	"github.com/AVENTER-UG/util/util"
 	_ "github.com/mattn/go-sqlite3"
 	log "github.com/sirupsen/logrus"
 	yaml "gopkg.in/yaml.v2"
@@ -195,9 +197,15 @@ func setup(mux *http.ServeMux, matrixClient *http.Client) {
 	if err := polling.Start(); err != nil {
 		log.WithError(err).Panic("Failed to start polling")
 	}
+	mux.HandleFunc("/test", util.Protect(handlers.Heartbeat))
+	wh := handlers.NewWebhook(db, clients)
+	mux.HandleFunc("/services/hooks/", util.Protect(wh.Handle))
 }
 
 func main() {
+
+	BindAddress = util.Getenv("BIND_ADDRESS", "0.0.0.0:4050")
+	BaseURL = util.Getenv("BASE_URL", "http://192.168.178.70:4050/")
 
 	log.Infof("GO-AVBOT build %s (%s %s %s %s %s)", MinVersion, BindAddress, BaseURL, DatabaseType, DatabaseURL, ConfigFile)
 

@@ -5,6 +5,7 @@ import (
 	"io"
 	"strings"
 
+	"go-avbot/database"
 	"go-avbot/types"
 
 	"github.com/AVENTER-UG/gomatrix"
@@ -19,17 +20,21 @@ const ServiceType = "unifi_protect"
 // Service represents the unifi_protext service. It has no Config fields.
 type Service struct {
 	types.DefaultService
-	connected bool
-	Host      string
-	Port      int
-	User      string
-	Password  string
-	csrfToken string
-	cookies   string
-	RoomID    string
+	connected          bool
+	Host               string
+	Port               int
+	User               string
+	Password           string
+	csrfToken          string
+	cookies            string
+	RoomID             string
+	webhookEndpointURL string
 }
 
 func (e *Service) Register(oldService types.Service, client *gomatrix.Client) error {
+	logrus.Infof("Unifi Protect WebhookURL: %s", e.webhookEndpointURL)
+	e.joinRooms(client)
+
 	// Start the NVR Livefeed
 	if err := e.Authenticate(); err != nil {
 		logrus.Fatal(err)
@@ -132,10 +137,34 @@ func (e *Service) SmartDetect(types string, client *gomatrix.Client, action *WsA
 	}
 }
 
+// PostRegister deletes this service if there are no registered Rooms
+func (e *Service) PostRegister(oldService types.Service) {
+	if e.RoomID != "" {
+		return
+	}
+
+	logrus.Infof("Delete Service %s because of no configured room", e.ServiceID())
+
+	if err := database.GetServiceDB().DeleteService(e.ServiceID()); err != nil {
+		logrus.WithError(err).Error("Failed to delete service")
+	}
+}
+
+func (e *Service) joinRooms(client *gomatrix.Client) {
+	if _, err := client.JoinRoom(e.RoomID, "", nil); err != nil {
+		log.WithFields(log.Fields{
+			log.ErrorKey: err,
+			"room_id":    e.RoomID,
+			"user_id":    client.UserID,
+		}).Error("Failed to join room")
+	}
+}
+
 func init() {
 	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
 		return &Service{
-			DefaultService: types.NewDefaultService(serviceID, serviceUserID, ServiceType),
+			DefaultService:     types.NewDefaultService(serviceID, serviceUserID, ServiceType),
+			webhookEndpointURL: webhookEndpointURL,
 		}
 	})
 }

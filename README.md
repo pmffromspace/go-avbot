@@ -46,6 +46,7 @@ There are still a lot of work. Currently our main focus is the AWS support.
 ### Unifi Protect
 
 - Receive events from Unifi Protect devices
+- Support Unifi Protect Alarm Manager
 
 ### Ollama AI
 

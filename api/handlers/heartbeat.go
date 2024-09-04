@@ -10,12 +10,7 @@ package handlers
 
 import (
 	"net/http"
-
-	"github.com/AVENTER-UG/util/util"
 )
-
-// Heartbeat implements the heartbeat API
-type Heartbeat struct{}
 
 // OnIncomingRequest returns an empty JSON object which can be used to detect liveness of Go-NEB.
 //
@@ -27,9 +22,6 @@ type Heartbeat struct{}
 //
 //	HTTP/1.1 200 OK
 //	{}
-func (*Heartbeat) OnIncomingRequest(req *http.Request) util.JSONResponse {
-	return util.JSONResponse{
-		Code: 200,
-		JSON: struct{}{},
-	}
+func Heartbeat(w http.ResponseWriter, req *http.Request) {
+	w.WriteHeader(200)
 }
