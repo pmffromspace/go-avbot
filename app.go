@@ -205,7 +205,7 @@ func setup(mux *http.ServeMux, matrixClient *http.Client) {
 func main() {
 
 	BindAddress = util.Getenv("BIND_ADDRESS", "0.0.0.0:4050")
-	BaseURL = util.Getenv("BASE_URL", "http://192.168.178.70:4050/")
+	BaseURL = util.Getenv("BASE_URL", "http://localhost:4050/")
 
 	log.Infof("GO-AVBOT build %s (%s %s %s %s %s)", MinVersion, BindAddress, BaseURL, DatabaseType, DatabaseURL, ConfigFile)
 

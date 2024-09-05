@@ -3,6 +3,7 @@ package unifi_protect
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 
@@ -45,7 +46,7 @@ func (e *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 		return
 	}
 
-	logrus.Debug(string(payload))
+	logrus.Info(string(payload))
 
 	var notif webhookNotification
 	if err := json.Unmarshal([]byte(payload), &notif); err != nil {
@@ -54,7 +55,10 @@ func (e *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 		return
 	}
 
-	message := notif.Alarm.Name
+	message := fmt.Sprintf("<i>%s</i> triggerd by: ", notif.Alarm.Name)
+	for _, key := range notif.Alarm.Triggers {
+		message += key.Key + " "
+	}
 
 	msg := gomatrix.HTMLMessage{
 		Body:          message,
