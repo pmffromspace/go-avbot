@@ -46,7 +46,7 @@ func (e *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 		return
 	}
 
-	logrus.Info(string(payload))
+	logrus.Debug(string(payload))
 
 	var notif webhookNotification
 	if err := json.Unmarshal([]byte(payload), &notif); err != nil {
