@@ -3,7 +3,6 @@ package unifi_protect
 
 import (
 	"io"
-	"strings"
 
 	"go-avbot/database"
 	"go-avbot/types"
@@ -80,10 +79,8 @@ func (e *Service) Register(oldService types.Service, client *gomatrix.Client) er
 						}
 					}
 
-					if len(smart.SmartDetectTypes) > 0 {
-						if len(smart.Metadata.DetectedThumbnails) > 0 {
-							go e.SmartDetect(strings.Join(event.SmartDetectTypes, " "), client, action)
-						}
+					if len(smart.Metadata.DetectedThumbnails) > 0 {
+						go e.SmartDetect(smart.Metadata.DetectedThumbnails[0].Type, client, action)
 					}
 
 				}

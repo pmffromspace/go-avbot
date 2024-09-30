@@ -248,8 +248,7 @@ type Event struct {
 }
 
 type SmartDetectTypes struct {
-	SmartDetectTypes []string `json:"smartDetectTypes"`
-	Metadata         struct {
+	Metadata struct {
 		DetectedAreas []struct {
 			SmartDetectObject string `json:"smartDetectObject"`
 			AreaIndexes       []int  `json:"areaIndexes"`
