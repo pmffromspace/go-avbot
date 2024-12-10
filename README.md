@@ -8,7 +8,7 @@ AVBOT is a bot for the Matrix Chat System.
 First we have to create a config.yaml inside of data directory that we have to mount into the container. A sample of these config can be found in our Github repository.
 
 ```bash
-docker run -v ./data:/go-avbot/data:rw avhost/go-avbot:latest
+docker run -v ./data:/app/data:rw avhost/go-avbot:latest
 ```
 
 ## License
